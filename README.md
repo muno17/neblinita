@@ -2,7 +2,7 @@
 Repo for my final project for CS50P
 
 
-# YOUR PROJECT TITLE
+# Neblina V.1 - Audio Plugin
 #### Video Demo:  <URL HERE>
 #### Description:
 TODO
