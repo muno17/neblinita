@@ -1,6 +1,6 @@
 from pyo import *
 
-# Audio I/O information
+#  list out audio I/O information
 print(f"portaudio version: {pa_get_version()}")
 print(pa_list_host_apis())
 print("- - - - - - - - - - - -")
