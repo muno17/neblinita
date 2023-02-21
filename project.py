@@ -18,17 +18,9 @@ og_wave = Scope(interface)
 
 n = Noise()
 
-h1 = Harmonizer(interface).out()
-h2 = Harmonizer(h1).out()
-h3 = Harmonizer(h2).out()
-h4 = Harmonizer(h3).out()
-ch = Chorus(h4).out()
-
-#distortion()
 
 
 # run server with a small gui
-new_wave = Scope()
 s.start()
 s.gui(locals())
 
