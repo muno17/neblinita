@@ -2,7 +2,7 @@
 #### Video Demo:  <URL HERE>
 #### Description:
 Using pyo library to create an audio effect processor.
-- harmonizer to add ambiance
+- harmonizer to add harmonic content
 - distortion
 - delay
 - filter for "darkness"
