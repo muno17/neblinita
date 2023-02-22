@@ -15,4 +15,5 @@ Using pyo library as a sound engine to create an audio effect processor.
 Challenges
 - learning DSP
 - implementing a way to stream live sound from an external (ob-6) source
-
+- chaining all the effect together
+- implementing a wet/dry feature
