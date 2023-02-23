@@ -29,8 +29,9 @@ def main():
     
     # signal path for wet signal
 
-    #harmonizer_out = harmonizer(interface)
-    delay_left, delay_right = delay(wet_path, buftime)
+    harmonizer_out = harmonizer(wet_path)
+    #harmonizer_out.out()  ###DECIDE IF WE WANT THIS ON OR NOT###
+    delay_left, delay_right = delay(harmonizer_out, buftime)###DECIDE IF WE WANT HARMONIZER GOING IN OR NOT###
     #delay_left.play().out()  #----- delay left channel
     #delay_right.play().out(1) #----- delay right channel
     chorus_left, chorus_right = chorus(delay_left, delay_right)
@@ -44,19 +45,15 @@ def main():
     s.start()
     s.gui(locals())
 
-
     # If your final output uses less channels than the number of audio streams in an object, don’t 
     # forget to mix it down (call its mix() method) before applying effects on the sum of the signals.
-
-
-
 
 def harmonizer(wet_path):
     # Half-sine window used as the amplitude envelope of the overlaps.
     env = WinTable(8)
 
     # Length of the window in seconds.
-    wsize = 0.1
+    wsize = 0.3
 
     # Amount of transposition in semitones.
     trans = -7
@@ -71,7 +68,7 @@ def harmonizer(wet_path):
     ind = Phasor(freq=rate, phase=[0, 0.5])
 
     # Each head reads the amplitude envelope...
-    win = Pointer(table=env, index=ind, mul=0.7)
+    win = Pointer(table=env, index=ind, mul=0.9)
 
     # ... and modulates the delay time (scaled by the window size) of a delay line.
     # mix(1) is used to mix the two overlaps on a single audio stream.
