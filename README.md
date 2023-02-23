@@ -1,4 +1,4 @@
-# neblina v.1 - Audio Plugin
+# neblina - Audio Effects Plugin
 #### Video Demo:  <URL HERE>
 #### Description:
 Using pyo library as a sound engine to create an audio effect processor.
