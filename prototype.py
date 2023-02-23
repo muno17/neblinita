@@ -23,13 +23,14 @@ def main():
     n = Noise()
 
     
-    # signal path, wet signal
+    # signal path for wet signal
 
-    #path = harmonizer(interface)
-    left, right = delay(interface, buftime)
-    left.play().out()
-    right.play().out(1)
+    #harmonizer_out = harmonizer(interface)
+    #delay_left, delay_right = delay(interface, buftime)
+    #delay_left.play().out()  ----- delay left channel
+    #delay_right.play().out(1) ----- delay right channel
 
+    chorus_out = chorus(wet_signal)
 
     # run server with a small gui
     s.start()
@@ -42,7 +43,7 @@ def main():
 
 
 
-def harmonizer(SIGNAL):
+def harmonizer(wet_path):
     # Half-sine window used as the amplitude envelope of the overlaps.
     env = WinTable(8)
 
@@ -66,13 +67,13 @@ def harmonizer(SIGNAL):
 
     # ... and modulates the delay time (scaled by the window size) of a delay line.
     # mix(1) is used to mix the two overlaps on a single audio stream.
-    snd = Delay(SIGNAL, delay=ind * wsize, mul=win).mix(1)
+    snd = Delay(wet_path, delay=ind * wsize, mul=win).mix(1)
 
     # The transposed signal is sent to the right speaker.
     return snd
 
 
-def delay(SIGNAL, buftime):
+def delay(wet_path, buftime):
     # Delay parameters
     delay_time_l = Sig(0.5)  # Delay time for the left channel delay.
     delay_time_l.ctrl() # slider
@@ -91,13 +92,13 @@ def delay(SIGNAL, buftime):
 
     # Initialize the left delay with the original mono source and the right
     # delay signal (multiplied by the feedback value) as input.
-    left = Delay(SIGNAL + right * delay_feed, delay=delay_time_l)
+    left = Delay(wet_pathL + right * delay_feed, delay=delay_time_l)
 
     # One issue with recursive cross-delay is if we set the feedback to
     # 0, the right delay never gets any signal. To resolve this, we add a
     # non-recursive delay, with a gain that is the inverse of the feedback,
     # to the right delay input.
-    original_delayed = Delay(SIGNAL, delay_time_l, mul=1 - delay_feed)
+    original_delayed = Delay(wet_path, delay_time_l, mul=1 - delay_feed)
 
     # Change the right delay input (now that the left delay exists).
     right.setInput(original_delayed + left * delay_feed)
@@ -106,7 +107,7 @@ def delay(SIGNAL, buftime):
     def playit():
         "Assign a sound to the player and start playback."
         which = random.randint(1, 4)
-        path = SIGNAL % which
+        path = wet_path % which
         #sf.path = path
         signal.play()
 
@@ -117,6 +118,25 @@ def delay(SIGNAL, buftime):
     return left, right
 
 
+def chorus(wet_path, ):
+    # Mix the source in stereo and send the signal to the output.
+    interface_out = interface.mix(2).out()
+
+    # Sets values for 8 LFO'ed delay lines (you can add more if you want!).
+    # LFO frequencies.
+    freqs = [0.254, 0.465, 0.657, 0.879, 1.23, 1.342, 1.654, 1.879]
+    # Center delays in seconds.
+    cdelay = [0.0087, 0.0102, 0.0111, 0.01254, 0.0134, 0.01501, 0.01707, 0.0178]
+    # Modulation depths in seconds.
+    adelay = [0.001, 0.0012, 0.0013, 0.0014, 0.0015, 0.0016, 0.002, 0.0023]
+
+    # Create 8 sinusoidal LFOs with center delays "cdelay" and depths "adelay".
+    lfos = Sine(freqs, mul=adelay, add=cdelay)
+
+    # Create 8 modulated delay lines with a little feedback and send the signals
+    # to the output. Streams 1, 3, 5, 7 to the left and streams 2, 4, 6, 8 to the
+    # right (default behaviour of the out() method).
+    delays = Delay(interface, lfos, feedback=0.5, mul=0.5).out()
 
 
 
