@@ -46,3 +46,4 @@ TO DO
 - implement audio output
     - if one audio output, sum to mono
     - if two audio outputs, output in stereo
+    - mix wet and dry signals

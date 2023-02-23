@@ -4,7 +4,7 @@ import random
 
 def main():
     # initiate server
-    s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for ob-6
+    s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
     # set the input device
     s.setInputDevice(1) # zoom
     # set the output device
@@ -13,7 +13,11 @@ def main():
     # boot server
     s.boot()
     # dry signal
-    interface = Input().out()
+    interface = Input()
+    wet_path = interface
+
+    #output dry signal
+    interface.play().out()
 
     # get buffer
     buftime = s.getBufferSize() / s.getSamplingRate()
@@ -26,11 +30,15 @@ def main():
     # signal path for wet signal
 
     #harmonizer_out = harmonizer(interface)
-    #delay_left, delay_right = delay(interface, buftime)
-    #delay_left.play().out()  ----- delay left channel
-    #delay_right.play().out(1) ----- delay right channel
+    delay_left, delay_right = delay(wet_path, buftime)
+    #delay_left.play().out()  #----- delay left channel
+    #delay_right.play().out(1) #----- delay right channel
+    chorus_left, chorus_right = chorus(delay_left, delay_right)
+    chorus_left.play().out() #---- chorus left channel
+    chorus_right.play().out() #---- chorus right channel
 
-    chorus_out = chorus(wet_signal)
+
+
 
     # run server with a small gui
     s.start()
@@ -92,7 +100,7 @@ def delay(wet_path, buftime):
 
     # Initialize the left delay with the original mono source and the right
     # delay signal (multiplied by the feedback value) as input.
-    left = Delay(wet_pathL + right * delay_feed, delay=delay_time_l)
+    left = Delay(wet_path + right * delay_feed, delay=delay_time_l)
 
     # One issue with recursive cross-delay is if we set the feedback to
     # 0, the right delay never gets any signal. To resolve this, we add a
@@ -118,10 +126,7 @@ def delay(wet_path, buftime):
     return left, right
 
 
-def chorus(wet_path, ):
-    # Mix the source in stereo and send the signal to the output.
-    interface_out = interface.mix(2).out()
-
+def chorus(delay_left, delay_right):
     # Sets values for 8 LFO'ed delay lines (you can add more if you want!).
     # LFO frequencies.
     freqs = [0.254, 0.465, 0.657, 0.879, 1.23, 1.342, 1.654, 1.879]
@@ -136,7 +141,10 @@ def chorus(wet_path, ):
     # Create 8 modulated delay lines with a little feedback and send the signals
     # to the output. Streams 1, 3, 5, 7 to the left and streams 2, 4, 6, 8 to the
     # right (default behaviour of the out() method).
-    delays = Delay(interface, lfos, feedback=0.5, mul=0.5).out()
+    left_chorus = Delay(delay_left, lfos, feedback=0.3, mul=0.3)
+    right_chorus = Delay(delay_right, lfos, feedback=0.4, mul=0.3)
+
+    return left_chorus, right_chorus
 
 
 
