@@ -85,10 +85,7 @@ def delay(wet_path, buftime):
     delay_feed = Sig(0.75)  # Feedback value for both delays.
     delay_feed.ctrl() # slider
 
-    # Because the right delay gets its input sound from the left delay, while
-    # it is computed before (to send its output sound to the left delay), it
-    # will be one buffer size late. To compensate this additional delay on the
-    # right, we substract one buffer size from the real delay time.
+    # buffer compensation
     delay_time_r = Sig(delay_time_l, add=-buftime)
 
     # Initialize the right delay with zeros as input because the left delay
@@ -99,15 +96,11 @@ def delay(wet_path, buftime):
     # delay signal (multiplied by the feedback value) as input.
     left = Delay(wet_path + right * delay_feed, delay=delay_time_l)
 
-    # One issue with recursive cross-delay is if we set the feedback to
-    # 0, the right delay never gets any signal. To resolve this, we add a
-    # non-recursive delay, with a gain that is the inverse of the feedback,
-    # to the right delay input.
+    # non-recursive delay fed to right output
     original_delayed = Delay(wet_path, delay_time_l, mul=1 - delay_feed)
 
     # Change the right delay input (now that the left delay exists).
     right.setInput(original_delayed + left * delay_feed)
-
 
     def playit():
         "Assign a sound to the player and start playback."
@@ -115,7 +108,6 @@ def delay(wet_path, buftime):
         path = wet_path % which
         #sf.path = path
         signal.play()
-
 
     # Call the function "playit" every second.
     pat = Pattern(playit, 1).play()
@@ -135,9 +127,7 @@ def chorus(delay_left, delay_right):
     # Create 8 sinusoidal LFOs with center delays "cdelay" and depths "adelay".
     lfos = Sine(freqs, mul=adelay, add=cdelay)
 
-    # Create 8 modulated delay lines with a little feedback and send the signals
-    # to the output. Streams 1, 3, 5, 7 to the left and streams 2, 4, 6, 8 to the
-    # right (default behaviour of the out() method).
+    # Create 8 modulated delay lines with a little feedback
     left_chorus = Delay(delay_left, lfos, feedback=0.3, mul=0.3)
     right_chorus = Delay(delay_right, lfos, feedback=0.4, mul=0.3)
 
