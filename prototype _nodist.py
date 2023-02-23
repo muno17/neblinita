@@ -23,8 +23,7 @@ def main():
 
     ### signal chain for wet signal ###
     harmonizer_out = harmonizer(wet_path)
-    distortion_out = distortion(harmonizer_out)
-    delay1_left, delay1_right = delay1(distortion_out, buftime)
+    delay1_left, delay1_right = delay1(harmonizer_out, buftime)
     delay2_left, delay2_right = delay2(delay1_left, delay1_right, buftime)
     chorus_left, chorus_right = chorus(delay2_left, delay2_right)
     wet_left, wet_right = reverb(chorus_left, chorus_right)
@@ -38,46 +37,6 @@ def main():
 
     # If your final output uses less channels than the number of audio streams in an object, don’t 
     # forget to mix it down (call its mix() method) before applying effects on the sum of the signals.
-
-
-def distortion(harmonizer_out):
-    # Distortion parameters
-    BP_CENTER_FREQ = 400  # Bandpass filter center frequency.
-    BP_Q = 3  # Bandpass Q (center_freq / Q = bandwidth).
-    BOOST = 25  # Pre-boost (linear gain).
-    LP_CUTOFF_FREQ = 3000  # Lowpass filter cutoff frequency.
-    BALANCE = 0.7  # Balance dry - wet.
-
-    # The transfert function is build in two phases.
-    # 1. Transfert function for signal lower than 0.
-    table = ExpTable([(0, -0.25), (4096, 0), (8192, 0)], exp=30)
-    # 2. Transfert function for signal higher than 0.
-    # First, create an exponential function from 1 (at the beginning of the table)
-    # to 0 (in the middle of the table).
-    high_table = ExpTable([(0, 1), (2000, 1), (4096, 0), (4598, 0), (8192, 0)], exp=5, inverse=False)
-    # Then, reverse the table’s data in time, to put the shape in the second
-    # part of the table.
-    high_table.reverse()
-    # Finally, add the second table to the first, point by point.
-    table.add(high_table)
-
-    # Bandpass filter and boost gain applied on input signal.
-    bp = ButBP(harmonizer_out, freq=BP_CENTER_FREQ, q=BP_Q)
-    boost = Sig(bp, mul=BOOST)
-
-    # Apply the transfert function.
-    sig = Lookup(table, boost)
-
-    # Lowpass filter on the distorted signal.
-    lp = ButLP(sig, freq=LP_CUTOFF_FREQ, mul=0.7)
-
-    # Balance between dry and wet signals.
-    mixed = Interp(harmonizer_out, lp, interp=BALANCE)
-
-    # Send the signal to the outputs.
-    out = (mixed * .8)
-
-    return out
 
 
 def harmonizer(wet_path):

@@ -55,7 +55,4 @@ mixed = Interp(interface, lp, interp=BALANCE)
 # Send the signal to the outputs.
 out = (mixed * 0.3).out()
 
-# Show the resulting waveform.
-sc = Scope(mixed)
-
 s.gui(locals())
