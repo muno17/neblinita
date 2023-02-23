@@ -21,15 +21,12 @@ def main():
     #output dry signal
     interface.play().out()
 
-    ### signal path for wet signal ###
+    ### signal chain for wet signal ###
     harmonizer_out = harmonizer(wet_path)
     #harmonizer_out.out()  ###DECIDE IF WE WANT THIS ON OR NOT###
-    delay_left, delay_right = delay(harmonizer_out, buftime)###DECIDE IF WE WANT HARMONIZER GOING IN OR NOT###
-    #delay_left.play().out()  #----- delay left channel
-    #delay_right.play().out(1) #----- delay right channel
-    chorus_left, chorus_right = chorus(delay_left, delay_right)
-    chorus_left.play().out() #---- chorus left channel
-    chorus_right.play().out() #---- chorus right channel
+    delay1_left, delay1_right = delay1(harmonizer_out, buftime)
+    delay2_left, delay2_right = delay2(delay1_left, delay1_right, buftime)
+    chorus_left, chorus_right = chorus(delay2_left, delay2_right)
     wet_left, wet_right = reverb(chorus_left, chorus_right)
     wet_left.play().out()
     wet_right.play().out()
@@ -72,11 +69,11 @@ def harmonizer(wet_path):
     return snd
 
 
-def delay(wet_path, buftime):
+def delay1(wet_path, buftime):
     # Delay parameters
-    delay_time_l = Sig(0.4)  # Delay time for the left channel delay.
+    delay_time_l = Sig(0.1)  # Delay time for the left channel delay.
     delay_time_l.ctrl() # slider
-    delay_feed = Sig(0.8)  # Feedback value for both delays.
+    delay_feed = Sig(0.6)  # Feedback value for both delays.
     delay_feed.ctrl() # slider
 
     # buffer compensation
@@ -92,6 +89,42 @@ def delay(wet_path, buftime):
 
     # non-recursive delay fed to right output
     original_delayed = Delay(wet_path, delay_time_l, mul=1 - delay_feed)
+
+    # Change the right delay input (now that the left delay exists).
+    right.setInput(original_delayed + left * delay_feed)
+
+    def playit():
+        "Assign a sound to the player and start playback."
+        which = random.randint(1, 4)
+        path = wet_path % which
+        #sf.path = path
+        signal.play()
+
+    # Call the function "playit" every second.
+    pat = Pattern(playit, 1).play()
+
+    return left, right
+
+def delay2(delay1_left, delay1_right, buftime):
+    # Delay parameters
+    delay_time_l = Sig(0.18)  # Delay time for the left channel delay.
+    delay_time_l.ctrl() # slider
+    delay_feed = Sig(0.8)  # Feedback value for both delays.
+    delay_feed.ctrl() # slider
+
+    # buffer compensation
+    delay_time_r = Sig(delay_time_l, add=-buftime)
+
+    # Initialize the right delay with zeros as input because the left delay
+    # does not exist yet.
+    right = Delay(Sig(0), delay=delay_time_r)
+
+    # Initialize the left delay with the original mono source and the right
+    # delay signal (multiplied by the feedback value) as input.
+    left = Delay(delay1_left + delay1_right + right * delay_feed, delay=delay_time_l)
+
+    # non-recursive delay fed to right output
+    original_delayed = Delay(delay1_left + delay1_right, delay_time_l, mul=1 - delay_feed)
 
     # Change the right delay input (now that the left delay exists).
     right.setInput(original_delayed + left * delay_feed)
