@@ -6,16 +6,15 @@ Using pyo library as a sound engine to create an audio effect processor.
 - harmonizer to add harmonic content
 - noise for a bit of dirt
 - distortion for real grit
-- filter for "darkness"
-- delay for ambiance and fractals
+- delay1 for smoothness
+- delay2 for ambiance and fractals
 - chorus for extra color
-- filter for more "darkness"
 - reverb for ambiance and space
 
 Challenges
 - learning DSP
-- implementing a way to stream live sound from an external (ob-6) source
-- chaining all the effect together
+- implementing a way to stream live sound from an external (ob-6) source - DONE
+- chaining all the effect together - DONE
 - implementing a wet/dry feature
 - creating a GUI
 - creating lfos
@@ -25,8 +24,8 @@ TO DO
 - customize harmonizer parameter
 - customize noise parameter
 - customize distortion parameter
-- customize filter1 parameter
-- customize delay parameter
+- customize delay1 parameter
+- customize delay2 parameter
 - customize chorus parameter
 - customize filter2 parameter
 - customize reverb parameter

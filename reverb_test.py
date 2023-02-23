@@ -14,8 +14,8 @@ interface = Input().play().out()
 # Four parallel stereo comb filters. The delay times are chosen
 # to be as uncorrelated as possible. Prime numbers are a good
 # choice for delay lengths in samples.
-comb1 = Delay(interface, delay=[0.0997, 0.4277], feedback=0.65)
-comb2 = Delay(interface, delay=[0.7371, 0.0393], feedback=0.51)
+comb1 = Delay(interface, delay=[0.0997, 0.4277], feedback=0.90)
+comb2 = Delay(interface, delay=[0.7371, 0.0393], feedback=0.85)
 comb3 = Delay(interface, delay=[0.5411, 0.0409], feedback=0.5)
 comb4 = Delay(interface, delay=[0.1137, 0.7155], feedback=0.73)
 

@@ -30,6 +30,9 @@ def main():
     chorus_left, chorus_right = chorus(delay_left, delay_right)
     chorus_left.play().out() #---- chorus left channel
     chorus_right.play().out() #---- chorus right channel
+    wet_left, wet_right = reverb(chorus_left, chorus_right)
+    wet_left.play().out()
+    wet_right.play().out()
 
 
     # run server with a small gui
@@ -124,6 +127,38 @@ def chorus(delay_left, delay_right):
 
     return left_chorus, right_chorus
 
+
+def  reverb(chorus_left, chorus_right):
+    # The delay times are chosen to be as uncorrelated as possible.
+    # Prime numbers are a good choice for delay lengths in samples.
+    # left channel
+    comb1 = Delay(chorus_left, delay=[0.0997, 0.4277], feedback=0.90)
+    comb2 = Delay(chorus_left, delay=[0.7371, 0.0393], feedback=0.85)
+    comb3 = Delay(chorus_left, delay=[0.5411, 0.0409], feedback=0.5)
+    comb4 = Delay(chorus_left, delay=[0.1137, 0.7155], feedback=0.73)
+
+    combsum_left = chorus_left + comb1 + comb2 + comb3 + comb4
+
+    #right channel
+    comb5 = Delay(chorus_right, delay=[0.0997, 0.4277], feedback=0.90)
+    comb6 = Delay(chorus_right, delay=[0.7371, 0.0393], feedback=0.85)
+    comb7 = Delay(chorus_right, delay=[0.5411, 0.0409], feedback=0.5)
+    comb8 = Delay(chorus_right, delay=[0.1137, 0.7155], feedback=0.73)
+
+    combsum_right = chorus_right + comb5 + comb6 + comb7 + comb8
+
+    # The sum of the original signal and the comb filters
+    # feeds two serial allpass filters.
+    left_all1 = Allpass(combsum_left, delay=[0.005, 0.00507], feedback=0.75)
+    left_all2 = Allpass(left_all1, delay=[0.0117, 0.0123], feedback=0.61)
+    right_all1 = Allpass(combsum_right, delay=[0.005, 0.00507], feedback=0.75)
+    right_all2 = Allpass(right_all1, delay=[0.0117, 0.0123], feedback=0.61)
+
+    # Brightness control.
+    left_lowp = Tone(left_all2, freq=3500, mul=0.25)
+    right_lowp = Tone(right_all2, freq=3500, mul=0.25)
+
+    return left_lowp, right_lowp
 
 
 
