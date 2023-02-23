@@ -21,28 +21,26 @@ Challenges
     - lfo to module shapes of other lfos 
 
 TO DO
-- customize harmonizer parameter
+- customize harmonizer parameter  DONE
 - customize noise parameter
-- customize distortion parameter
-- customize delay1 parameter
-- customize delay2 parameter
-- customize chorus parameter
-- customize filter2 parameter
-- customize reverb parameter
-- chain everything together, test different signal paths
+- customize distortion parameter DONE
+- customize delay1 parameter DONE
+- customize delay2 parameter DONE
+- customize chorus parameter DONE
+- customize reverb parameter DONE
+- chain everything together, test different signal paths DONEISH
 - implement a wet/dry feature
 - create aggregate functions
     - input volume control
     - fog (distortion, noise) knob
-    - filter1 freq)
     - space knob (reverb and delay time)
     - disintegration (reverb decay)
     - haze (harmonic content - harmonizer, chorus / delay frequency)
-    - filter2
     - master lfo control
     - wet/dry knob
 - create a GUI for aggregate functions
 - implement audio output
     - if one audio output, sum to mono
     - if two audio outputs, output in stereo
-    - mix wet and dry signals
+    - mix wet and dry signals 
+    - create master mix

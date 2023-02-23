@@ -9,7 +9,7 @@ def main():
     # set the input device
     s.setInputDevice(1) # zoom
     # set the output device
-    s.setOutputDevice(2) # headphones: 2 when zoom is used, 0 when not, 4 for speakers
+    s.setOutputDevice(4) # headphones: when zoom is used 2 - headphones, 4 - speakers
 
     # boot server
     s.boot()
@@ -20,11 +20,14 @@ def main():
     wet_path = dry
 
     #output dry signal
-    dry.play().out()
+    dry_mix = (dry * 1)
+    dry_mix.play().out()
 
-    ### signal chain for wet signal ###
+    ### signal chain for harmonizer ###
     harmonizer_out = (harmonizer(wet_path) * .4) ### harmonizer output
     harmonizer_out.play().out()
+
+    ### signal chain for main wet signal ###
     distortion_out = distortion(wet_path)
     delay1_left, delay1_right = delay1(wet_path, buftime)
     delay2_left, delay2_right = delay2(delay1_left, delay1_right, buftime)
