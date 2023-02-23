@@ -8,10 +8,12 @@ def main():
     # set the input device
     s.setInputDevice(1) # zoom
     # set the output device
-    s.setOutputDevice(2) # headphones: 2 when zoom is used, 0 when not
+    s.setOutputDevice(2) # headphones: 2 when zoom is used, 0 when not, 4 for speakers
 
     # boot server
     s.boot()
+    # get buffer time
+    buftime = s.getBufferSize() / s.getSamplingRate()
     # dry signal
     interface = Input()
     wet_path = interface
@@ -19,16 +21,7 @@ def main():
     #output dry signal
     interface.play().out()
 
-    # get buffer
-    buftime = s.getBufferSize() / s.getSamplingRate()
-
-    og_wave = Scope(interface)
-
-    n = Noise()
-
-    
-    # signal path for wet signal
-
+    ### signal path for wet signal ###
     harmonizer_out = harmonizer(wet_path)
     #harmonizer_out.out()  ###DECIDE IF WE WANT THIS ON OR NOT###
     delay_left, delay_right = delay(harmonizer_out, buftime)###DECIDE IF WE WANT HARMONIZER GOING IN OR NOT###
@@ -37,8 +30,6 @@ def main():
     chorus_left, chorus_right = chorus(delay_left, delay_right)
     chorus_left.play().out() #---- chorus left channel
     chorus_right.play().out() #---- chorus right channel
-
-
 
 
     # run server with a small gui
@@ -80,9 +71,9 @@ def harmonizer(wet_path):
 
 def delay(wet_path, buftime):
     # Delay parameters
-    delay_time_l = Sig(0.5)  # Delay time for the left channel delay.
+    delay_time_l = Sig(0.4)  # Delay time for the left channel delay.
     delay_time_l.ctrl() # slider
-    delay_feed = Sig(0.75)  # Feedback value for both delays.
+    delay_feed = Sig(0.8)  # Feedback value for both delays.
     delay_feed.ctrl() # slider
 
     # buffer compensation

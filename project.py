@@ -14,7 +14,7 @@ def main():
     s.boot()
     interface = Input().play().out()
 
-    og_wave = Scope(interface)
+    #og_wave = Scope(interface)
 
     n = Noise()
 
