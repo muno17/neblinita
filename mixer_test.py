@@ -9,7 +9,7 @@ def main():
     # set the input device
     s.setInputDevice(1) # zoom
     # set the output device
-    s.setOutputDevice(4) # headphones: when zoom is used 2 - headphones, 4 - speakers
+    s.setOutputDevice(2) # headphones: when zoom is used 2 - headphones, 4 - speakers
 
     # boot server
     s.boot()
