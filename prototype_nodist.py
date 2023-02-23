@@ -22,8 +22,8 @@ def main():
     interface.play().out()
 
     ### signal chain for wet signal ###
-    harmonizer_out = harmonizer(wet_path)
-    delay1_left, delay1_right = delay1(harmonizer_out, buftime)
+    #harmonizer_out = harmonizer(wet_path)
+    delay1_left, delay1_right = delay1(wet_path, buftime)
     delay2_left, delay2_right = delay2(delay1_left, delay1_right, buftime)
     chorus_left, chorus_right = chorus(delay2_left, delay2_right)
     wet_left, wet_right = reverb(chorus_left, chorus_right)

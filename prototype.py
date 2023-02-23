@@ -5,6 +5,7 @@ import random
 def main():
     # initiate server
     s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
+    s.amp = 0.3
     # set the input device
     s.setInputDevice(1) # zoom
     # set the output device
@@ -15,21 +16,24 @@ def main():
     # get buffer time
     buftime = s.getBufferSize() / s.getSamplingRate()
     # dry signal
-    interface = Input()
-    wet_path = interface
+    dry = Input()
+    wet_path = dry
 
     #output dry signal
-    interface.play().out()
+    dry.play().out()
 
     ### signal chain for wet signal ###
-    harmonizer_out = harmonizer(wet_path)
-    distortion_out = distortion(harmonizer_out)
-    delay1_left, delay1_right = delay1(distortion_out, buftime)
+    harmonizer_out = (harmonizer(wet_path) * .4) ### harmonizer output
+    harmonizer_out.play().out()
+    distortion_out = distortion(wet_path)
+    delay1_left, delay1_right = delay1(wet_path, buftime)
     delay2_left, delay2_right = delay2(delay1_left, delay1_right, buftime)
     chorus_left, chorus_right = chorus(delay2_left, delay2_right)
     wet_left, wet_right = reverb(chorus_left, chorus_right)
-    wet_left.play().out()
-    wet_right.play().out()
+    wet_left = (wet_left * .6)
+    wet_right = (wet_right * .6)
+    wet_left.play().out() # left reverb output
+    wet_right.play().out() # right reverb output
 
 
     # run server with a small gui
@@ -44,7 +48,7 @@ def distortion(harmonizer_out):
     # Distortion parameters
     BP_CENTER_FREQ = 400  # Bandpass filter center frequency.
     BP_Q = 3  # Bandpass Q (center_freq / Q = bandwidth).
-    BOOST = 25  # Pre-boost (linear gain).
+    BOOST = 50  # Pre-boost (linear gain).
     LP_CUTOFF_FREQ = 3000  # Lowpass filter cutoff frequency.
     BALANCE = 0.7  # Balance dry - wet.
 
@@ -75,7 +79,7 @@ def distortion(harmonizer_out):
     mixed = Interp(harmonizer_out, lp, interp=BALANCE)
 
     # Send the signal to the outputs.
-    out = (mixed * .8)
+    out = (mixed * .6)
 
     return out
 
@@ -148,7 +152,7 @@ def delay1(wet_path, buftime):
 
 def delay2(delay1_left, delay1_right, buftime):
     # Delay parameters
-    delay_time_l = Sig(0.18)  # Delay time for the left channel delay.
+    delay_time_l = Sig(0.4)  # Delay time for the left channel delay.
     #delay_time_l.ctrl() # slider
     delay_feed = Sig(0.8)  # Feedback value for both delays.
     #delay_feed.ctrl() # slider
