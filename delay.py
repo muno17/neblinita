@@ -14,10 +14,10 @@ interface = Input().play().out()
 buftime = s.getBufferSize() / s.getSamplingRate()
 
 # Delay parameters
-delay_time_l = Sig(0.125)  # Delay time for the left channel delay.
-delay_time_l.ctrl()
+delay_time_l = Sig(0.5)  # Delay time for the left channel delay.
+delay_time_l.ctrl() # slider window
 delay_feed = Sig(0.75)  # Feedback value for both delays.
-delay_feed.ctrl()
+delay_feed.ctrl() # slider window
 
 # Because the right delay gets its input sound from the left delay, while
 # it is computed before (to send its output sound to the left delay), it
@@ -47,16 +47,6 @@ original_delayed = Delay(interface, delay_time_l, mul=1 - delay_feed)
 right.setInput(original_delayed + left * delay_feed)
 
 
-def playit():
-    "Assign a sound to the player and start playback."
-    which = random.randint(1, 4)
-    path = interface % which
-    #sf.path = path
-    interface.play()
-
-
-# Call the function "playit" every second.
-pat = Pattern(playit, 1).play()
 
 
 s.gui(locals())
