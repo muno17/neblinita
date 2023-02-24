@@ -2,7 +2,7 @@
 #### Video Demo:  <URL HERE>
 #### Description:
 Using pyo library as a sound engine to create an audio effect processor.
-neblina creates two reverbs:
+neblina creates two different flavors of reverbs:
 
 'light reverb' - creates harmonic content and a large atmosphere
 
