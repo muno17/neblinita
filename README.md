@@ -17,6 +17,7 @@ fog reverb
 - dist_delay to make distortion sound longer
 - dirt_delay to have the distorted signal repeat
 - grimeverb to create a distorted atmosphere
+____________________________
 
 Challenges
 - learning DSP
@@ -26,6 +27,7 @@ Challenges
 - creating a GUI
 - creating lfos
     - lfo to module shapes of other lfos 
+____________________________
 
 TO DO
 - customize noise parameter
