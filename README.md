@@ -1,7 +1,8 @@
 # neblina - audio fog machine
 #### Video Demo:  <URL HERE>
 #### Description:
-Using pyo library as a sound engine to create an audio effect processor.  Creates two reverbs:
+Using pyo library as a sound engine to create an audio effect processor.
+neblina creates two reverbs:
 'light reverb' - creates harmonic content and a large atmosphere
 'fog reverb' - creates a distorted atmosphere
 The two reverbs are mixed with the input signal to create a large, beautifully distorted sound.
