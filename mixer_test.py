@@ -46,7 +46,7 @@ def main():
     master.addinput(3, left_lightverb)
     master.addinput(4, right_lightverb)
 
-    master.out()
+    #master.out()
 
     # run a gui to keep the program running until exit command
     s.start()

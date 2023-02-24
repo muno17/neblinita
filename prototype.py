@@ -90,10 +90,7 @@ def distdelay(distortion_out, buftime):
     delay_time_l = Sig(0.08)  # Delay time for the left channel delay.
     delay_feed = Sig(0.3)  # Feedback value for both delays.
 
-    # Because the right delay gets its input sound from the left delay, while
-    # it is computed before (to send its output sound to the left delay), it
-    # will be one buffer size late. To compensate this additional delay on the
-    # right, we substract one buffer size from the real delay time.
+    # buffer compensation
     delay_time_r = Sig(delay_time_l, add=-buftime)
 
     # Initialize the right delay with zeros as input because the left delay
@@ -104,10 +101,7 @@ def distdelay(distortion_out, buftime):
     # delay signal (multiplied by the feedback value) as input.
     left = Delay(distortion_out + right * delay_feed, delay=delay_time_l)
 
-    # One issue with recursive cross-delay is if we set the feedback to
-    # 0, the right delay never gets any signal. To resolve this, we add a
-    # non-recursive delay, with a gain that is the inverse of the feedback,
-    # to the right delay input.
+    # non-recursive delay fed to right output
     original_delayed = Delay(distortion_out, delay_time_l, mul=1 - delay_feed)
 
     # Change the right delay input (now that the left delay exists).
