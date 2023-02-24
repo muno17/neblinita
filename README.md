@@ -11,19 +11,19 @@ neblina creates two different flavors of reverbs:
 
 'fog reverb' - creates a distorted atmosphere
 
-The two reverbs are mixed with the input signal to create a large, beautifully distorted sound.
+The two reverbs are mixed with the input signal to create a spacious, beautifully distorted atmosphere.
 
 light reverb
 - delay1 for smoothness
 - delay2 for ambiance and fractals
 - chorus for extra color
-- reverb for ambiance and space
+- reverb for space
 
 fog reverb
 - distortion for grit
 - dist_delay to make distortion sound longer
 - dirt_delay to have the distorted signal repeat
-- grimeverb to create a distorted atmosphere
+- grimeverb to create a distorted space
 ____________________________
 
 Challenges
