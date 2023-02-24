@@ -1,19 +1,22 @@
 # neblina - audio fog machine
 #### Video Demo:  <URL HERE>
 #### Description:
-Using pyo library as a sound engine to create an audio effect processor.
-
-fog reverb
-- distortion for grit
-- dist_delay to make distortion sound longer
-- dirt_delay to have the distorted signal repeat
-- grimeverb to create a distorted atmosphere
+Using pyo library as a sound engine to create an audio effect processor.  Creates two reverbs:
+'light reverb' - creates harmonic content and a large atmosphere
+'fog reverb' - creates a distorted atmosphere
+The two reverbs are mixed with the input signal to create a large, beautifully distorted sound.
 
 light reverb
 - delay1 for smoothness
 - delay2 for ambiance and fractals
 - chorus for extra color
 - reverb for ambiance and space
+
+fog reverb
+- distortion for grit
+- dist_delay to make distortion sound longer
+- dirt_delay to have the distorted signal repeat
+- grimeverb to create a distorted atmosphere
 
 Challenges
 - learning DSP
