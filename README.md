@@ -37,13 +37,7 @@ Challenges
 ____________________________
 
 TO DO
-- customize noise parameter
-- customize distortion parameter DONE
-- customize delay1 parameter DONE
-- customize delay2 parameter DONE
-- customize chorus parameter DONE
-- customize reverb parameter DONE
-- chain everything together, test different signal paths DONE
+- create lfos to modulate times in delays,reverbs and chorus
 - implement a wet/dry feature
 - create aggregate functions
     - input volume control
@@ -53,9 +47,18 @@ TO DO
     - haze (harmonic content - chorus / delay frequency)
     - master lfo control
     - wet/dry knob
-- create a GUI for aggregate functions
+- create a GUI for control and aggregate function knobs
 - implement audio output
     - if one audio output, sum to mono
     - if two audio outputs, output in stereo
     - mix wet and dry signals 
-    - create master mix
+    - create master mix DONE
+
+
+DONE
+- customize distortion parameter DONE
+- customize delay1 parameter DONE
+- customize delay2 parameter DONE
+- customize chorus parameter DONE
+- customize reverb parameter DONE
+- chain everything together, test different signal paths DONE
