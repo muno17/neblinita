@@ -6,7 +6,7 @@ import psutil
 def main():
     # initiate server
     s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
-    s.amp = 0.3
+    s.amp = 0.2
     # set the input device
     s.setInputDevice(1) # zoom
     # set the output device
@@ -25,15 +25,14 @@ def main():
     #dry_mix = (dry * 1)
     dry.play().out()
 
-    ### signal chain for harmonizer/delay - adds pitch 7 semitones down and 5 semitones down###
+    ### signal chain for distortion reverb ###
     distortion_out = distortion(wet_path1)
     left_distdelay, right_distdelay = dist_delay(distortion_out, buftime)
-    left_harmdelay, right_harmdelay = harm_delay(left_distdelay, right_distdelay, buftime)
-    #l_harmonizer_out, r_harmonizer_out = harmonizer(left_harmdelay, right_harmdelay)
-    left_harmdelay.play().out()
-    right_harmdelay.play().out()
+    left_dirtdelay, right_dirtdelay = dirt_delay(left_distdelay, right_distdelay, buftime)
+    left_dirtdelay.play().out()
+    right_dirtdelay.play().out()
 
-    ### signal chain for fog ###
+    ### signal chain for harmonic reverb ###
     delay1_left, delay1_right = delay1(wet_path2, buftime)
     delay2_left, delay2_right = delay2(delay1_left, delay1_right, buftime)
     chorus_left, chorus_right = chorus(delay2_left, delay2_right)
@@ -51,7 +50,7 @@ def main():
     # forget to mix it down (call its mix() method) before applying effects on the sum of the signals.
 
 
-def distortion(harmonizer_out):
+def distortion(wet_path1):
     # Distortion parameters
     BP_CENTER_FREQ = 400  # Bandpass filter center frequency.
     BP_Q = 3  # Bandpass Q (center_freq / Q = bandwidth).
@@ -83,7 +82,7 @@ def distortion(harmonizer_out):
     lp = ButLP(sig, freq=LP_CUTOFF_FREQ, mul=0.6)
 
     # Balance between dry and wet signals.
-    mixed = Interp(harmonizer_out, lp, interp=BALANCE)
+    mixed = Interp(wet_path1, lp, interp=BALANCE)
 
     return mixed
 
@@ -119,7 +118,7 @@ def dist_delay(distortion_out, buftime):
     return left, right
 
     
-def harm_delay(left_distdelay, right_distdelay, buftime):
+def dirt_delay(left_distdelay, right_distdelay, buftime):
     delay_time_l = Sig(0.3)  # Delay time for the left channel delay.
     delay_feed = Sig(0.8)  # Feedback value for both delays.
 
@@ -154,43 +153,6 @@ def harm_delay(left_distdelay, right_distdelay, buftime):
     rout = (right * .1)
 
     return lout, rout
-
-
-def harmonizer(left_harmdelay, right_harmdelay):
-    # Half-sine window used as the amplitude envelope of the overlaps.
-    env = WinTable(8)
-
-    # Length of the window in seconds.
-    wsize = 0.1
-
-    # Amount of transposition in semitones.
-    ltrans = -7
-    rtrans = -5
-
-    # Compute the transposition ratio.
-    lratio = pow(2.0, ltrans / 12.0)
-    rratio = pow(2.0, rtrans / 12.0)
-
-    # Compute the reading head speed.
-    lrate = -(lratio - 1) / wsize
-    rrate = -(rratio - 1) / wsize
-
-    # Two reading heads out-of-phase.
-    lind = Phasor(freq=lrate, phase=[0, 0.5])
-    rind = Phasor(freq=rrate, phase=[0, 0.5])
-
-    # Each head reads the amplitude envelope...
-    lwin = Pointer(table=env, index=lind, mul=0.25)
-    rwin = Pointer(table=env, index=rind, mul=0.25)
-
-    # ... and modulates the delay time (scaled by the window size) of a delay line.
-    # mix(1) is used to mix the two overlaps on a single audio stream.
-    lout = Delay(left_harmdelay, delay=lind * wsize, mul=lwin)
-    rout = Delay(right_harmdelay, delay=rind * wsize, mul=rwin)
-
-    # The transposed signal is sent to the right speaker.
-    return lout, rout
-
 
 
 def delay1(wet_path, buftime):
