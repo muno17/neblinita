@@ -1,6 +1,22 @@
 from pyo import *
+from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton
+from PyQt6.QtCore import QSize, Qt
 import time
 import random
+import sys
+
+# Subclass QMainWindow to customize your application's main window
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("My App")
+        button = QPushButton("Press Me!")
+        self.setFixedSize(QSize(500,300))
+
+        # Set the central widget of the Window.
+        self.setCentralWidget(button)
+
 
 def main():
     # initiate server
