@@ -3,8 +3,10 @@
 #### Description:
 Using pyo library as a sound engine to create an audio effect processor.
 neblina creates two reverbs:
+
 'light reverb' - creates harmonic content and a large atmosphere
 'fog reverb' - creates a distorted atmosphere
+
 The two reverbs are mixed with the input signal to create a large, beautifully distorted sound.
 
 light reverb
