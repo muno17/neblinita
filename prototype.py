@@ -27,10 +27,11 @@ def main():
 
     ### signal chain for distortion reverb ###
     distortion_out = distortion(wet_path1)
-    left_distdelay, right_distdelay = dist_delay(distortion_out, buftime)
-    left_dirtdelay, right_dirtdelay = dirt_delay(left_distdelay, right_distdelay, buftime)
-    left_dirtdelay.play().out()
-    right_dirtdelay.play().out()
+    left_distdelay, right_distdelay = distdelay(distortion_out, buftime)
+    left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
+    left_grimeverb, right_grimeverb = grimeverb(left_dirtdelay, right_dirtdelay)
+    left_grimeverb.play().out()
+    right_grimeverb.play().out()
 
     ### signal chain for harmonic reverb ###
     delay1_left, delay1_right = delay1(wet_path2, buftime)
@@ -87,7 +88,7 @@ def distortion(wet_path1):
     return mixed
 
 
-def dist_delay(distortion_out, buftime):
+def distdelay(distortion_out, buftime):
     # Delay parameters
     delay_time_l = Sig(0.08)  # Delay time for the left channel delay.
     delay_feed = Sig(0.3)  # Feedback value for both delays.
@@ -118,7 +119,7 @@ def dist_delay(distortion_out, buftime):
     return left, right
 
     
-def dirt_delay(left_distdelay, right_distdelay, buftime):
+def dirtdelay(left_distdelay, right_distdelay, buftime):
     delay_time_l = Sig(0.3)  # Delay time for the left channel delay.
     delay_feed = Sig(0.8)  # Feedback value for both delays.
 
@@ -153,6 +154,40 @@ def dirt_delay(left_distdelay, right_distdelay, buftime):
     rout = (right * .1)
 
     return lout, rout
+
+
+def grimeverb():
+    def  reverb(left_dirtdelay, right_dirtdelay):
+    # The delay times are chosen to be as uncorrelated as possible.
+    # Prime numbers are a good choice for delay lengths in samples.
+    # left channel
+    comb1 = Delay(left_dirtdelay, delay=[0.0997, 0.4277], feedback=0.90)
+    comb2 = Delay(left_dirtdelay, delay=[0.7371, 0.0393], feedback=0.85)
+    comb3 = Delay(left_dirtdelay, delay=[0.5411, 0.0409], feedback=0.5)
+    comb4 = Delay(left_dirtdelay, delay=[0.1137, 0.7155], feedback=0.73)
+
+    combsum_left = left_dirtdelay + comb1 + comb2 + comb3 + comb4
+
+    #right channel
+    comb5 = Delay(right_dirtdelay, delay=[0.0997, 0.4277], feedback=0.90)
+    comb6 = Delay(right_dirtdelay, delay=[0.7371, 0.0393], feedback=0.85)
+    comb7 = Delay(right_dirtdelay, delay=[0.5411, 0.0409], feedback=0.5)
+    comb8 = Delay(right_dirtdelay, delay=[0.1137, 0.7155], feedback=0.73)
+
+    combsum_right = right_dirtdelay + comb5 + comb6 + comb7 + comb8
+
+    # The sum of the original signal and the comb filters
+    # feeds two serial allpass filters.
+    left_all1 = Allpass(combsum_left, delay=[0.005, 0.00507], feedback=0.75)
+    left_all2 = Allpass(left_all1, delay=[0.0117, 0.0123], feedback=0.61)
+    right_all1 = Allpass(combsum_right, delay=[0.005, 0.00507], feedback=0.75)
+    right_all2 = Allpass(right_all1, delay=[0.0117, 0.0123], feedback=0.61)
+
+    # Brightness control.
+    left_lowp = Tone(left_all2, freq=3500, mul=0.2)
+    right_lowp = Tone(right_all2, freq=3500, mul=0.2)
+
+    return left_lowp, right_lowp
 
 
 def delay1(wet_path, buftime):
@@ -190,6 +225,7 @@ def delay1(wet_path, buftime):
     pat = Pattern(playit, 1).play()
 
     return left, right
+
 
 def delay2(delay1_left, delay1_right, buftime):
     # Delay parameters
@@ -278,64 +314,6 @@ def  reverb(chorus_left, chorus_right):
     right_lowp = Tone(right_all2, freq=3500, mul=0.25)
 
     return left_lowp, right_lowp
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__ == "__main__":
