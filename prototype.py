@@ -22,28 +22,39 @@ def main():
     wet_path1 = dry
     # create copy of input for light reverb
     wet_path2 = dry
-    #output dry signal
-    dry.play().out()
 
     ### signal chain for fog reverb ###
     distortion_out = distortion(wet_path1)
     left_distdelay, right_distdelay = distdelay(distortion_out, buftime)
     left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
-    left_grimeverb, right_grimeverb = grimeverb(left_dirtdelay, right_dirtdelay)
-    left_grimeverb.play().out()
-    right_grimeverb.play().out()
+    left_gv, right_gv = grimeverb(left_dirtdelay, right_dirtdelay)
+    left_grimeverb = (left_gv * .65)
+    right_grimeverb = (right_gv * .65)
 
     ### signal chain for light reverb ###
     delay1_left, delay1_right = delay1(wet_path2, buftime)
     delay2_left, delay2_right = delay2(delay1_left, delay1_right, buftime)
     chorus_left, chorus_right = chorus(delay2_left, delay2_right)
     wet_left, wet_right = reverb(chorus_left, chorus_right)
-    wet_left = (wet_left * .6)
-    wet_right = (wet_right * .6)
-    wet_left.play().out()
-    wet_right.play().out()
+    left_lightverb = (wet_left * .6)
+    right_lightverb = (wet_right * .6)
 
-    # run a gui to keep the programming running until exit command
+    ### mixer ###
+    master = Mixer(chnls=5)
+    master.addInput(0, dry)
+    master.addInput(1, left_grimeverb)
+    master.addInput(2, right_grimeverb)
+    master.addInput(3, left_lightverb)
+    master.addInput(4, right_lightverb)
+    master.setAmp(0, 0, .2) # dry
+    master.setAmp(1, 0, .6) # left_grimeverb
+    master.setAmp(2, 0, .6) # right_grimeverb
+    master.setAmp(3, 0, .8) # left_lightverb
+    master.setAmp(4, 0, .8) # right_lightverb
+
+    master.out()
+
+    # run a gui to keep the program running until exit command
     s.start()
     s.gui(locals())
     

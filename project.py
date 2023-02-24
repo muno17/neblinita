@@ -16,8 +16,6 @@ def main():
 
     #og_wave = Scope(interface)
 
-    n = Noise()
-
 
 
     # run server with a small gui

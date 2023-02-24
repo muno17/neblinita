@@ -27,8 +27,8 @@ def main():
     left_distdelay, right_distdelay = distdelay(distortion_out, buftime)
     left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
     left_gv, right_gv = grimeverb(left_dirtdelay, right_dirtdelay)
-    left_grimeverb = (left_gv * .6)
-    right_grimeverb = (right_gv * .6)
+    left_grimeverb = (left_gv * .65)
+    right_grimeverb = (right_gv * .65)
 
     ### signal chain for light reverb ###
     delay1_left, delay1_right = delay1(wet_path2, buftime)
@@ -40,13 +40,18 @@ def main():
 
     ### mixer ###
     master = Mixer(chnls=5)
-    master.addinput(0, dry)
-    master.addinput(1, left_grimeverb)
-    master.addinput(2, right_grimeverb)
-    master.addinput(3, left_lightverb)
-    master.addinput(4, right_lightverb)
+    master.addInput(0, dry)
+    master.addInput(1, left_grimeverb)
+    master.addInput(2, right_grimeverb)
+    master.addInput(3, left_lightverb)
+    master.addInput(4, right_lightverb)
+    master.setAmp(0, 0, .2) # dry
+    master.setAmp(1, 0, .6) # left_grimeverb
+    master.setAmp(2, 0, .6) # right_grimeverb
+    master.setAmp(3, 0, .8) # left_lightverb
+    master.setAmp(4, 0, .8) # right_lightverb
 
-    #master.out()
+    master.out()
 
     # run a gui to keep the program running until exit command
     s.start()
