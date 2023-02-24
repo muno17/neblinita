@@ -18,14 +18,14 @@ def main():
     buftime = s.getBufferSize() / s.getSamplingRate()
     # dry signal
     dry = Input()
+    # create copy of input for fog reverb
     wet_path1 = dry
+    # create copy of input for light reverb
     wet_path2 = dry
-
     #output dry signal
-    #dry_mix = (dry * 1)
     dry.play().out()
 
-    ### signal chain for distortion reverb ###
+    ### signal chain for fog reverb ###
     distortion_out = distortion(wet_path1)
     left_distdelay, right_distdelay = distdelay(distortion_out, buftime)
     left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
@@ -33,23 +33,20 @@ def main():
     left_grimeverb.play().out()
     right_grimeverb.play().out()
 
-    ### signal chain for harmonic reverb ###
+    ### signal chain for light reverb ###
     delay1_left, delay1_right = delay1(wet_path2, buftime)
     delay2_left, delay2_right = delay2(delay1_left, delay1_right, buftime)
     chorus_left, chorus_right = chorus(delay2_left, delay2_right)
     wet_left, wet_right = reverb(chorus_left, chorus_right)
     wet_left = (wet_left * .6)
     wet_right = (wet_right * .6)
-    wet_left.play().out() # left reverb output
-    wet_right.play().out() # right reverb output
+    wet_left.play().out()
+    wet_right.play().out()
 
-    # run server with a small gui
+    # run a gui to keep the programming running until exit command
     s.start()
     s.gui(locals())
-
-    # If your final output uses less channels than the number of audio streams in an object, don’t 
-    # forget to mix it down (call its mix() method) before applying effects on the sum of the signals.
-
+    
 
 def distortion(wet_path1):
     # Distortion parameters

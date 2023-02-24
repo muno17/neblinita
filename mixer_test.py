@@ -21,7 +21,6 @@ def main():
     wet_path2 = dry
 
     #output dry signal
-    #dry_mix = (dry * 1)
     dry.play().out()
 
     ### signal chain for distortion reverb ###
@@ -41,6 +40,11 @@ def main():
     wet_right = (wet_right * .6)
     wet_left.play().out() # left reverb output
     wet_right.play().out() # right reverb output
+
+
+
+
+
 
     # run server with a small gui
     s.start()
