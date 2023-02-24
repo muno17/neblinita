@@ -72,7 +72,7 @@ def distortion(wet_path1):
     table.add(high_table)
 
     # Bandpass filter and boost gain applied on input signal.
-    bp = ButBP(harmonizer_out, freq=BP_CENTER_FREQ, q=BP_Q)
+    bp = ButBP(wet_path1, freq=BP_CENTER_FREQ, q=BP_Q)
     boost = Sig(bp, mul=BOOST)
 
     # Apply the transfert function.
