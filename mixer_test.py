@@ -5,7 +5,7 @@ import random
 def main():
     # initiate server
     s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
-    s.amp = 0.3
+    s.amp = 0.2
     # set the input device
     s.setInputDevice(1) # zoom
     # set the output device
@@ -17,19 +17,23 @@ def main():
     buftime = s.getBufferSize() / s.getSamplingRate()
     # dry signal
     dry = Input()
-    wet_path = dry
+    wet_path1 = dry
+    wet_path2 = dry
 
     #output dry signal
-    dry_mix = (dry * 1)
-    dry_mix.play().out()
+    #dry_mix = (dry * 1)
+    dry.play().out()
 
-    ### signal chain for harmonizer ###
-    harmonizer_out = (harmonizer(wet_path) * .4) ### harmonizer output
-    harmonizer_out.play().out()
+    ### signal chain for distortion reverb ###
+    distortion_out = distortion(wet_path1)
+    left_distdelay, right_distdelay = distdelay(distortion_out, buftime)
+    left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
+    left_grimeverb, right_grimeverb = grimeverb(left_dirtdelay, right_dirtdelay)
+    left_grimeverb.play().out()
+    right_grimeverb.play().out()
 
-    ### signal chain for main wet signal ###
-    distortion_out = distortion(wet_path)
-    delay1_left, delay1_right = delay1(wet_path, buftime)
+    ### signal chain for harmonic reverb ###
+    delay1_left, delay1_right = delay1(wet_path2, buftime)
     delay2_left, delay2_right = delay2(delay1_left, delay1_right, buftime)
     chorus_left, chorus_right = chorus(delay2_left, delay2_right)
     wet_left, wet_right = reverb(chorus_left, chorus_right)
@@ -37,7 +41,6 @@ def main():
     wet_right = (wet_right * .6)
     wet_left.play().out() # left reverb output
     wet_right.play().out() # right reverb output
-
 
     # run server with a small gui
     s.start()
@@ -47,13 +50,13 @@ def main():
     # forget to mix it down (call its mix() method) before applying effects on the sum of the signals.
 
 
-def distortion(harmonizer_out):
+def distortion(wet_path1):
     # Distortion parameters
     BP_CENTER_FREQ = 400  # Bandpass filter center frequency.
     BP_Q = 3  # Bandpass Q (center_freq / Q = bandwidth).
-    BOOST = 50  # Pre-boost (linear gain).
+    BOOST = 25  # Pre-boost (linear gain).
     LP_CUTOFF_FREQ = 3000  # Lowpass filter cutoff frequency.
-    BALANCE = 0.7  # Balance dry - wet.
+    BALANCE = 0.9  # Balance dry - wet.
 
     # The transfert function is build in two phases.
     # 1. Transfert function for signal lower than 0.
@@ -69,52 +72,120 @@ def distortion(harmonizer_out):
     table.add(high_table)
 
     # Bandpass filter and boost gain applied on input signal.
-    bp = ButBP(harmonizer_out, freq=BP_CENTER_FREQ, q=BP_Q)
+    bp = ButBP(wet_path1, freq=BP_CENTER_FREQ, q=BP_Q)
     boost = Sig(bp, mul=BOOST)
 
     # Apply the transfert function.
     sig = Lookup(table, boost)
 
     # Lowpass filter on the distorted signal.
-    lp = ButLP(sig, freq=LP_CUTOFF_FREQ, mul=0.7)
+    lp = ButLP(sig, freq=LP_CUTOFF_FREQ, mul=0.6)
 
     # Balance between dry and wet signals.
-    mixed = Interp(harmonizer_out, lp, interp=BALANCE)
+    mixed = Interp(wet_path1, lp, interp=BALANCE)
 
-    # Send the signal to the outputs.
-    out = (mixed * .6)
-
-    return out
+    return mixed
 
 
-def harmonizer(wet_path):
-    # Half-sine window used as the amplitude envelope of the overlaps.
-    env = WinTable(8)
+def distdelay(distortion_out, buftime):
+    # Delay parameters
+    delay_time_l = Sig(0.08)  # Delay time for the left channel delay.
+    delay_feed = Sig(0.3)  # Feedback value for both delays.
 
-    # Length of the window in seconds.
-    wsize = 0.5
+    # Because the right delay gets its input sound from the left delay, while
+    # it is computed before (to send its output sound to the left delay), it
+    # will be one buffer size late. To compensate this additional delay on the
+    # right, we substract one buffer size from the real delay time.
+    delay_time_r = Sig(delay_time_l, add=-buftime)
 
-    # Amount of transposition in semitones.
-    trans = -7
+    # Initialize the right delay with zeros as input because the left delay
+    # does not exist yet.
+    right = Delay(Sig(0), delay=delay_time_r)
 
-    # Compute the transposition ratio.
-    ratio = pow(2.0, trans / 12.0)
+    # Initialize the left delay with the original mono source and the right
+    # delay signal (multiplied by the feedback value) as input.
+    left = Delay(distortion_out + right * delay_feed, delay=delay_time_l)
 
-    # Compute the reading head speed.
-    rate = -(ratio - 1) / wsize
+    # One issue with recursive cross-delay is if we set the feedback to
+    # 0, the right delay never gets any signal. To resolve this, we add a
+    # non-recursive delay, with a gain that is the inverse of the feedback,
+    # to the right delay input.
+    original_delayed = Delay(distortion_out, delay_time_l, mul=1 - delay_feed)
 
-    # Two reading heads out-of-phase.
-    ind = Phasor(freq=rate, phase=[0, 0.5])
+    # Change the right delay input (now that the left delay exists).
+    right.setInput(original_delayed + left * delay_feed)
 
-    # Each head reads the amplitude envelope...
-    win = Pointer(table=env, index=ind, mul=0.9)
+    return left, right
 
-    # ... and modulates the delay time (scaled by the window size) of a delay line.
-    # mix(1) is used to mix the two overlaps on a single audio stream.
-    snd = Delay(wet_path, delay=ind * wsize, mul=win).mix(1)
+    
+def dirtdelay(left_distdelay, right_distdelay, buftime):
+    delay_time_l = Sig(0.3)  # Delay time for the left channel delay.
+    delay_feed = Sig(0.8)  # Feedback value for both delays.
 
-    # The transposed signal is sent to the right speaker.
-    return snd
+    # buffer compensation
+    delay_time_r = Sig(delay_time_l, add=-buftime)
+
+    # Initialize the right delay with zeros as input because the left delay
+    # does not exist yet.
+    right = Delay(Sig(0), delay=delay_time_r)
+
+    # Initialize the left delay with the original mono source and the right
+    # delay signal (multiplied by the feedback value) as input.
+    left = Delay(left_distdelay + right_distdelay + right * delay_feed, delay=delay_time_l)
+
+    # non-recursive delay fed to right output
+    original_delayed = Delay(left_distdelay + right_distdelay, delay_time_l, mul=1 - delay_feed)
+
+    # Change the right delay input (now that the left delay exists).
+    right.setInput(original_delayed + left * delay_feed)
+
+    def playit():
+        "Assign a sound to the player and start playback."
+        which = random.randint(1, 4)
+        path = wet_path % which
+        #sf.path = path
+        signal.play()
+
+    # Call the function "playit" every second.
+    pat = Pattern(playit, 1).play()
+
+    lout = (left * .1)
+    rout = (right * .1)
+
+    return lout, rout
+
+
+def grimeverb(left_dirtdelay, right_dirtdelay):
+    # The delay times are chosen to be as uncorrelated as possible.
+    # Prime numbers are a good choice for delay lengths in samples.
+    # left channel
+    comb1 = Delay(left_dirtdelay, delay=[0.0997, 0.4277], feedback=0.50)
+    comb2 = Delay(left_dirtdelay, delay=[0.7371, 0.0393], feedback=0.65)
+    comb3 = Delay(left_dirtdelay, delay=[0.5411, 0.0409], feedback=0.5)
+    comb4 = Delay(left_dirtdelay, delay=[0.1137, 0.7155], feedback=0.73)
+
+    combsum_left = left_dirtdelay + comb1 + comb2 + comb3 + comb4
+
+    #right channel
+    comb5 = Delay(right_dirtdelay, delay=[0.0997, 0.4277], feedback=0.50)
+    comb6 = Delay(right_dirtdelay, delay=[0.7371, 0.0393], feedback=0.65)
+    comb7 = Delay(right_dirtdelay, delay=[0.5411, 0.0409], feedback=0.5)
+    comb8 = Delay(right_dirtdelay, delay=[0.1137, 0.7155], feedback=0.73)
+
+    combsum_right = right_dirtdelay + comb5 + comb6 + comb7 + comb8
+
+    # The sum of the original signal and the comb filters
+    # feeds two serial allpass filters.
+    left_all1 = Allpass(combsum_left, delay=[0.005, 0.00507], feedback=0.75)
+    left_all2 = Allpass(left_all1, delay=[0.0117, 0.0123], feedback=0.61)
+    right_all1 = Allpass(combsum_right, delay=[0.005, 0.00507], feedback=0.75)
+    right_all2 = Allpass(right_all1, delay=[0.0117, 0.0123], feedback=0.61)
+
+    # Brightness control.
+    left_lowp = Tone(left_all2, freq=3500, mul=0.25)
+    right_lowp = Tone(right_all2, freq=3500, mul=0.25)
+
+    return left_lowp, right_lowp
 
 
 def delay1(wet_path, buftime):
@@ -152,6 +223,7 @@ def delay1(wet_path, buftime):
     pat = Pattern(playit, 1).play()
 
     return left, right
+
 
 def delay2(delay1_left, delay1_right, buftime):
     # Delay parameters
@@ -242,6 +314,8 @@ def  reverb(chorus_left, chorus_right):
     return left_lowp, right_lowp
 
 
+if __name__ == "__main__":
+    main()
 
 
 

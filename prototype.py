@@ -156,21 +156,20 @@ def dirtdelay(left_distdelay, right_distdelay, buftime):
     return lout, rout
 
 
-def grimeverb():
-    def  reverb(left_dirtdelay, right_dirtdelay):
+def grimeverb(left_dirtdelay, right_dirtdelay):
     # The delay times are chosen to be as uncorrelated as possible.
     # Prime numbers are a good choice for delay lengths in samples.
     # left channel
-    comb1 = Delay(left_dirtdelay, delay=[0.0997, 0.4277], feedback=0.90)
-    comb2 = Delay(left_dirtdelay, delay=[0.7371, 0.0393], feedback=0.85)
+    comb1 = Delay(left_dirtdelay, delay=[0.0997, 0.4277], feedback=0.50)
+    comb2 = Delay(left_dirtdelay, delay=[0.7371, 0.0393], feedback=0.65)
     comb3 = Delay(left_dirtdelay, delay=[0.5411, 0.0409], feedback=0.5)
     comb4 = Delay(left_dirtdelay, delay=[0.1137, 0.7155], feedback=0.73)
 
     combsum_left = left_dirtdelay + comb1 + comb2 + comb3 + comb4
 
     #right channel
-    comb5 = Delay(right_dirtdelay, delay=[0.0997, 0.4277], feedback=0.90)
-    comb6 = Delay(right_dirtdelay, delay=[0.7371, 0.0393], feedback=0.85)
+    comb5 = Delay(right_dirtdelay, delay=[0.0997, 0.4277], feedback=0.50)
+    comb6 = Delay(right_dirtdelay, delay=[0.7371, 0.0393], feedback=0.65)
     comb7 = Delay(right_dirtdelay, delay=[0.5411, 0.0409], feedback=0.5)
     comb8 = Delay(right_dirtdelay, delay=[0.1137, 0.7155], feedback=0.73)
 
@@ -184,8 +183,8 @@ def grimeverb():
     right_all2 = Allpass(right_all1, delay=[0.0117, 0.0123], feedback=0.61)
 
     # Brightness control.
-    left_lowp = Tone(left_all2, freq=3500, mul=0.2)
-    right_lowp = Tone(right_all2, freq=3500, mul=0.2)
+    left_lowp = Tone(left_all2, freq=3500, mul=0.25)
+    right_lowp = Tone(right_all2, freq=3500, mul=0.25)
 
     return left_lowp, right_lowp
 
