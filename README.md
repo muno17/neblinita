@@ -2,6 +2,9 @@
 #### Video Demo:  <URL HERE>
 #### Description:
 Using pyo library as a sound engine to create an audio effect processor.
+Using PyQt6 library to create the GUI.
+____________________________
+
 neblina creates two different flavors of reverbs:
 
 'light reverb' - creates harmonic content and a large atmosphere
