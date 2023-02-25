@@ -48,6 +48,10 @@ TO DO
     - master lfo control
     - wet/dry knob
 - create a GUI for control and aggregate function knobs
+    - knobs or faders?
+    - display signal level
+    - audio I/O
+    - info bubbles
 - implement audio output
     - if one audio output, sum to mono
     - if two audio outputs, output in stereo
