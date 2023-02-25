@@ -66,8 +66,14 @@ TO DO
         - for outputs: regex (r"^(\d*):\s OUT,.*$") - gets output number
         if matches := re.search((r"^(\d*):\s IN,.*$"), [find way to get list]):
             *matches.group(0) is an audio input*
+        else:
+            "select input"
+
+
         if matches := re.search((r"^(\d*):\s OUT,.*$"), [find way to get list]):
             *matches.group(0) is an audio input*
+        else:
+            "select output"
 
 
 
