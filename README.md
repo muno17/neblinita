@@ -32,8 +32,35 @@ Challenges
 - compress the master signal
 - implementing a wet/dry feature
 - creating a GUI
+    - dropdowns for interactive I/O
+    - knobs for aggregate functions
+    - signal output visualizer and control
+    - info bubbles for each widget giving brief explanation
 - creating lfos
     - lfo to module shapes of other lfos 
+____________________________
+
+IN PROGRESS
+- create a GUI for control and aggregate function knobs
+    - knobs or faders? - QDial, QSlider
+    - display signal level - QProgressBar
+        - be able to control
+        - displays decibel level, similar to ableton
+    - audio I/O - QComboBox for dropdown menu
+        - run pa_list_devices() to get a list for inputs and outputs
+        - for inputs: regex (r"^(\d*):\s IN,.*$") - gets input number
+        - for outputs: regex (r"^(\d*):\s OUT,.*$") - gets output number
+        if matches := re.search((r"^(\d*):\s IN,.*$"), [find way to get list]):
+            *matches.group(0) is an audio input*
+        else:
+            "select input"
+
+
+        if matches := re.search((r"^(\d*):\s OUT,.*$"), [find way to get list]):
+            *matches.group(0) is an audio input*
+        else:
+            "select output"
+    - info bubbles - QLabel
 ____________________________
 
 TO DO
@@ -49,36 +76,13 @@ TO DO
     - wet/dry knob
 
 
+- audio routing
     - implement audio output
     - if one audio output, sum to mono
     - if two audio outputs, output in stereo
     - mix wet and dry signals 
     - create master mix DONE
-
-
-
-- create a GUI for control and aggregate function knobs
-    - knobs or faders? - QDial, QSlider
-    - display signal level - QProgressBar
-    - audio I/O - QComboBox
-        - run pa_list_devices() to get a list for inputs and outputs
-        - for inputs: regex (r"^(\d*):\s IN,.*$") - gets input number
-        - for outputs: regex (r"^(\d*):\s OUT,.*$") - gets output number
-        if matches := re.search((r"^(\d*):\s IN,.*$"), [find way to get list]):
-            *matches.group(0) is an audio input*
-        else:
-            "select input"
-
-
-        if matches := re.search((r"^(\d*):\s OUT,.*$"), [find way to get list]):
-            *matches.group(0) is an audio input*
-        else:
-            "select output"
-
-
-
-    - info bubbles - QLabel
-
+______________________________
 
 DONE
 - customize distortion parameter DONE
