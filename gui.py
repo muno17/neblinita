@@ -1,26 +1,33 @@
-from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton
-from PyQt6.QtCore import QSize, Qt
 import sys
+from PyQt6.QtWidgets import QApplication, QWidget, QLineEdit, QPushButton, QTextEdit, QVBoxLayout
+from PyQt6.QtGui import QIcon
 
-# Subclass QMainWindow to customize your application's main window
-class MainWindow(QMainWindow):
+class MyApp(QWidget):
     def __init__(self):
         super().__init__()
+        self.setWindowTitle('hello app')
+        self.resize(500,300)
 
-        self.setWindowTitle("My App")
-        button = QPushButton("Press Me!")
-        self.setFixedSize(QSize(500,300))
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+        
+        self.inputField = QLineEdit()
+        button = QPushButton('&Say Hello', clicked=self.sayHello)
+        #button.clicked.connect(self.sayHello)
+        self.output = QTextEdit()
 
-        # Set the central widget of the Window.
-        self.setCentralWidget(button)
+        layout.addWidget(self.inputField)
+        layout.addWidget(button)
+        layout.addWidget(self.output)
+
+    def sayHello(self):
+        inputText = self.inputField.text()
+        self.output.setText('Hello {0}'.format(inputText))
 
 
-# You need one (and only one) QApplication instance per application.
-# Pass in sys.argv to allow command line arguments for your app.
-# If you know you won't use command line arguments QApplication([]) works too.
 app = QApplication(sys.argv)
 
-window = MainWindow()
+window = MyApp()
 window.show()
 
-app.exec()
+sys.exit(app.exec())

@@ -27,9 +27,9 @@ fog reverb
 ____________________________
 
 Challenges
-- learning DSP
 - implementing a way to stream live sound from an external (ob-6) source - DONE
 - chaining all the effect together - DONE
+- compress the master signal
 - implementing a wet/dry feature
 - creating a GUI
 - creating lfos
