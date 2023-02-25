@@ -47,16 +47,31 @@ TO DO
     - haze (harmonic content - chorus / delay frequency)
     - master lfo control
     - wet/dry knob
-- create a GUI for control and aggregate function knobs
-    - knobs or faders? - QDial, QSlider
-    - display signal level - QProgressBar
-    - audio I/O - QComboBox
-    - info bubbles - QLabel
-- implement audio output
+
+
+    - implement audio output
     - if one audio output, sum to mono
     - if two audio outputs, output in stereo
     - mix wet and dry signals 
     - create master mix DONE
+
+
+
+- create a GUI for control and aggregate function knobs
+    - knobs or faders? - QDial, QSlider
+    - display signal level - QProgressBar
+    - audio I/O - QComboBox
+        - run pa_list_devices() to get a list for inputs and outputs
+        - for inputs: regex (r"^(\d*):\s IN,.*$") - gets input number
+        - for outputs: regex (r"^(\d*):\s OUT,.*$") - gets output number
+        if matches := re.search((r"^(\d*):\s IN,.*$"), [find way to get list]):
+            *matches.group(0) is an audio input*
+        if matches := re.search((r"^(\d*):\s OUT,.*$"), [find way to get list]):
+            *matches.group(0) is an audio input*
+
+
+
+    - info bubbles - QLabel
 
 
 DONE
