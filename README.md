@@ -72,10 +72,8 @@ TO DO
     - space knob (reverb and delay time)
     - disintegration (reverb decay)
     - haze (harmonic content - chorus / delay frequency)
-    - master lfo control
+    - master lfo controls - speed, amount, shape
     - wet/dry knob
-
-
 - audio routing
     - implement audio output
     - if one audio output, sum to mono
