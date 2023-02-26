@@ -39,6 +39,15 @@ Challenges
 ____________________________
 
 IN PROGRESS
+
+
+- compress the master signal, do not let output exceed -3 db
+
+
+- implementing a wet/dry feature
+    - change mixer values as wet/dry added
+
+
 - create a GUI for control and aggregate function knobs
     - knobs or faders? - QDial, QSlider
     - display signal level - QProgressBar
@@ -48,10 +57,8 @@ IN PROGRESS
         - run pa_list_devices() to get a list for inputs and outputs
         - for inputs: regex (r"^(\d*):\s IN, name: (+*),.*$") - gets inputs
         - for outputs: regex (r"^(\d*):\s IN, name: (+*),.*$") - gets outputs
-____________________________
 
-TO DO
-- implement a wet/dry feature
+
 - create aggregate functions
     - input volume control
     - fog (distortion, noise) knob
@@ -60,6 +67,8 @@ TO DO
     - haze (harmonic content - chorus / delay frequency)
     - master lfo controls - speed, amount, shape
     - wet/dry knob
+
+
 - audio routing
     - implement audio output
     - if one audio output, sum to mono
