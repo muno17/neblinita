@@ -29,7 +29,7 @@ ____________________________
 Challenges
 - implementing a way to stream live sound from an external (ob-6) source - DONE
 - chaining all the effect together - DONE
-- compress the master signal
+- compress the master signal, do not let output exceed -3 db
 - implementing a wet/dry feature
 - creating a GUI
     - dropdowns for interactive I/O
@@ -70,7 +70,7 @@ TO DO
     - input volume control
     - fog (distortion, noise) knob
     - space knob (reverb and delay time)
-    - disintegration (reverb decay)
+    - disintegrate (reverb decay)
     - haze (harmonic content - chorus / delay frequency)
     - master lfo controls - speed, amount, shape
     - wet/dry knob
