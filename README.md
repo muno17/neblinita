@@ -79,3 +79,9 @@ DONE
 - customize chorus parameter DONE
 - customize reverb parameter DONE
 - chain everything together, test different signal paths DONE
+
+______________________________
+Acknowledgments
+- pyo 1.0.4 documentation by AJAX SOUND STUDIO (http://ajaxsoundstudio.com/pyodoc/index.html#)
+- PyQt v6.4.1 documentation by River Bank Computing (https://www.riverbankcomputing.com/static/Docs/PyQt6/)
+- pythonguis.com PyQt6 tutorials (https://www.pythonguis.com/pyqt6/)
