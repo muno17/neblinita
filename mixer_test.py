@@ -39,7 +39,7 @@ def main():
     right_lightverb = (wet_right * .6)
 
     ### mixer ###
-    master = Mixer(chnls=5)
+    master = Mixer(chnls=5, mul=.5)
     master.addInput(0, dry)
     master.addInput(1, left_grimeverb)
     master.addInput(2, right_grimeverb)
@@ -50,9 +50,9 @@ def main():
     master.setAmp(2, 0, .6) # right_grimeverb
     master.setAmp(3, 0, .9) # left_lightverb
     master.setAmp(4, 0, .9) # right_lightverb
-
+    master.ctrl()
     master.out()
-
+    
     # run a gui to keep the program running until exit command
     s.start()
     s.gui(locals())

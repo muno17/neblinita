@@ -29,7 +29,6 @@ ____________________________
 Challenges
 - implementing a way to stream live sound from an external (ob-6) source - DONE
 - chaining all the effect together - DONE
-- compress the master signal, do not let output exceed -3 db
 - implementing a wet/dry feature
 - creating a GUI
     - dropdowns for interactive I/O
@@ -40,13 +39,9 @@ ____________________________
 
 IN PROGRESS
 
-
-- compress the master signal, do not let output exceed -3 db
-
-
 - implementing a wet/dry feature
     - change mixer values as wet/dry added
-
+    - use Balance(input, input2, freq) ???
 
 - create a GUI for control and aggregate function knobs
     - knobs or faders? - QDial, QSlider
@@ -75,6 +70,7 @@ IN PROGRESS
     - if two audio outputs, output in stereo
     - mix wet and dry signals 
     - create master mix DONE
+        - multiplied output  by .5 to prevent clipping
 ______________________________
 
 DONE
