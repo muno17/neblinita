@@ -36,8 +36,6 @@ Challenges
     - knobs for aggregate functions
     - signal output visualizer and control
     - info bubbles for each widget giving brief explanation
-- creating lfos
-    - lfo to module shapes of other lfos 
 ____________________________
 
 IN PROGRESS
@@ -53,7 +51,6 @@ IN PROGRESS
 ____________________________
 
 TO DO
-- create lfos to modulate times in delays,reverbs and chorus
 - implement a wet/dry feature
 - create aggregate functions
     - input volume control

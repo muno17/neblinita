@@ -6,7 +6,7 @@ import psutil
 def main():
     # initiate server
     s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
-    s.amp = 0.2
+    s.amp = 0.15
     # set the input device
     s.setInputDevice(1) # zoom
     # set the output device
@@ -22,6 +22,7 @@ def main():
     wet_path1 = dry
     # create copy of input for light reverb
     wet_path2 = dry
+
 
     ### signal chain for fog reverb ###
     distortion_out = distortion(wet_path1)
@@ -46,11 +47,11 @@ def main():
     master.addInput(2, right_grimeverb)
     master.addInput(3, left_lightverb)
     master.addInput(4, right_lightverb)
-    master.setAmp(0, 0, .25) # dry
-    master.setAmp(1, 0, .6) # left_grimeverb
-    master.setAmp(2, 0, .6) # right_grimeverb
-    master.setAmp(3, 0, .9) # left_lightverb
-    master.setAmp(4, 0, .9) # right_lightverb
+    master.setAmp(0, 0, .2) # dry
+    master.setAmp(1, 0, .5) # left_grimeverb
+    master.setAmp(2, 0, .5) # right_grimeverb
+    master.setAmp(3, 0, .8) # left_lightverb
+    master.setAmp(4, 0, .8) # right_lightverb
 
     master.out()
 
@@ -266,7 +267,6 @@ def delay2(delay1_left, delay1_right, buftime):
 
 
 def chorus(delay_left, delay_right):
-    # Sets values for 8 LFO'ed delay lines (you can add more if you want!).
     # LFO frequencies.
     freqs = [0.254, 0.465, 0.657, 0.879, 1.23, 1.342, 1.654, 1.879]
     # Center delays in seconds.
