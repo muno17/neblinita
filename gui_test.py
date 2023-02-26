@@ -61,6 +61,33 @@ class MainWindow(QMainWindow):
     """
 
 
+    """
+    ** basic code to create a dial **
+        widget = QDial()
+        widget.setRange(-10, 100)
+        widget.setSingleStep(1)
+
+        widget.valueChanged.connect(self.value_changed)
+        widget.sliderMoved.connect(self.slider_position)
+        widget.sliderPressed.connect(self.slider_pressed)
+        widget.sliderReleased.connect(self.slider_released)
+
+        self.setCentralWidget(widget)
+
+    def value_changed(self, i):
+        print(i)
+
+    def slider_position(self, p):
+        print("position", p)
+
+    def slider_pressed(self):
+        print("Pressed!")
+
+    def slider_released(self):
+        print("Released")
+    """
+
+
 def main():
     # initiate server
     s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
