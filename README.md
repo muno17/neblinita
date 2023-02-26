@@ -27,6 +27,8 @@ fog reverb
 ____________________________
 
 Challenges
+
+
 - implementing a way to stream live sound from an external (ob-6) source - DONE
 - chaining all the effect together - DONE
 - implementing a wet/dry feature
@@ -39,10 +41,6 @@ ____________________________
 
 IN PROGRESS
 
-- implementing a wet/dry feature
-    - change mixer values as wet/dry added
-    - use Balance(input, input2, freq) ???
-
 - create a GUI for control and aggregate function knobs
     - knobs or faders? - QDial, QSlider
     - display signal level - QProgressBar
@@ -54,35 +52,35 @@ IN PROGRESS
         - for outputs: regex (r"^(\d*):\s IN, name: (+*),.*$") - gets outputs
 
 
-- create aggregate functions
-    - input volume control
+- create aggregate GUI widgetes to control:
     - fog (distortion, noise) knob
     - space knob (reverb and delay time)
     - disintegrate (reverb decay)
     - haze (harmonic content - chorus / delay frequency)
-    - master lfo controls - speed, amount, shape
     - wet/dry knob
+        - dry: dry = 1, everything else = 0
+        - wet: dry = 0, grimeverbs = .8, lightverbs = 1
+        - use Balance(input, input2, freq) ???
 
 
-- audio routing
-    - implement audio output
-    - if one audio output, sum to mono
-    - if two audio outputs, output in stereo
-    - mix wet and dry signals 
-    - create master mix DONE
-        - multiplied output  by .5 to prevent clipping
 ______________________________
 
 DONE
+
 - customize distortion parameter DONE
 - customize delay1 parameter DONE
 - customize delay2 parameter DONE
 - customize chorus parameter DONE
 - customize reverb parameter DONE
 - chain everything together, test different signal paths DONE
+- audio routing
+    - implement audio output DONE
+    - create master mix DONE
+        - multiplied output  by .5 to prevent clipping
 
 ______________________________
 Acknowledgments
+
 - pyo 1.0.4 documentation by AJAX SOUND STUDIO (http://ajaxsoundstudio.com/pyodoc/index.html#)
 - PyQt v6.4.1 documentation by River Bank Computing (https://www.riverbankcomputing.com/static/Docs/PyQt6/)
 - pythonguis.com PyQt6 tutorials (https://www.pythonguis.com/pyqt6/)

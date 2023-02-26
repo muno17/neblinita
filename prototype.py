@@ -46,13 +46,13 @@ def main():
     master.addInput(1, left_grimeverb)
     master.addInput(2, right_grimeverb)
     master.addInput(3, left_lightverb)
-    master.addInput(4, right_lightverb)
+    master.addInput(4, right_lightverb)``
     master.setAmp(0, 0, .2) # dry
     master.setAmp(1, 0, .5) # left_grimeverb
     master.setAmp(2, 0, .5) # right_grimeverb
     master.setAmp(3, 0, .8) # left_lightverb
     master.setAmp(4, 0, .8) # right_lightverb
-
+    master.ctrl()
     master.out()
 
     # run a gui to keep the program running until exit command
