@@ -30,6 +30,7 @@ def main():
     left_grimeverb = (left_gv * .65)
     right_grimeverb = (right_gv * .65)
 
+
     ### signal chain for light reverb ###
     delay1_left, delay1_right = delay1(wet_path2, buftime)
     delay2_left, delay2_right = delay2(delay1_left, delay1_right, buftime)
@@ -50,12 +51,11 @@ def main():
     master.setAmp(2, 0, .6) # right_grimeverb
     master.setAmp(3, 0, .9) # left_lightverb
     master.setAmp(4, 0, .9) # right_lightverb
-    master.ctrl()
     master.out()
     
     # run a gui to keep the program running until exit command
     s.start()
-    s.gui(locals())
+    s.gui(timer = False, title="neblina")
 
     # If your final output uses less channels than the number of audio streams in an object, don’t 
     # forget to mix it down (call its mix() method) before applying effects on the sum of the signals.

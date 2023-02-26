@@ -62,6 +62,8 @@ IN PROGRESS
         - dry: dry = 1, everything else = 0
         - wet: dry = 0, grimeverbs = .8, lightverbs = 1
         - use Balance(input, input2, freq) ???
+        OR
+        - control dry, wet_path1, wet_path2 signals
 
 
 ______________________________
