@@ -12,6 +12,7 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("neblina")
         self.setFixedSize(QSize(500,300))
+
     """
     ** basic code to create a dropdown, will need  one for both input and output **
 
@@ -25,18 +26,13 @@ class MainWindow(QMainWindow):
         widget.currentTextChanged.connect( self.text_changed )
 
         self.setCentralWidget(widget)
-
-    def index_changed(self, i): # i is an int
-            print (i)
-
-    def text_changed(self, s): # s is a str
-            print(s)
     """
 
 
         # Set the central widget of the Window.
         self.setCentralWidget(button)
 
+    """
     #function to pull the audio inputs, need to add to list and then send to QComboBox object
     #def audio_i:
            #- for outputs: regex (r"^(\d*):\s OUT,.*$") - gets output number
@@ -51,6 +47,7 @@ class MainWindow(QMainWindow):
             #*matches.group(0) is an audio input*
         #else:
             #"select output"
+    """
 
 
 def main():
