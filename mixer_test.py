@@ -325,11 +325,6 @@ def  reverb(chorus_left, chorus_right):
     return left_lowp, right_lowp
 
 
-if __name__ == "__main__":
-    main()
-
-
-
 
 if __name__ == "__main__":
     main()
