@@ -5,6 +5,18 @@ import time
 import random
 import sys
 
+# class to create color for window
+class Color(QWidget):
+
+    def __init__(self, color):
+        super(Color, self).__init__()
+        self.setAutoFillBackground(True)
+
+        palette = self.palette()
+        palette.setColor(QPalette.ColorRole.Window, QColor(color))
+        self.setPalette(palette)
+
+
 # Subclass QMainWindow to customize your application's main window
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -32,11 +44,28 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
     """
 
+    """
+    ** basic code to create a dial **
+        widget = QDial()
+        widget.setRange(-10, 100)
+        widget.setSingleStep(1)
 
+        widget.valueChanged.connect(self.value_changed)
+        widget.sliderMoved.connect(self.slider_position)
+        widget.sliderPressed.connect(self.slider_pressed)
+        widget.sliderReleased.connect(self.slider_released)
+
+        self.setCentralWidget(widget)
+    """
+
+        # add color
+        win_color = Color('grey')
         # Set the central widget of the Window.
-        self.setCentralWidget(button)
+        self.setCentralWidget(win_color)
 
     """
+    I/O functions
+
     #function to pull the audio inputs, need to add to list and then send to QComboBox object
     #def audio_i:
         i = 0
@@ -60,20 +89,8 @@ class MainWindow(QMainWindow):
             #"select output"
     """
 
-
     """
-    ** basic code to create a dial **
-        widget = QDial()
-        widget.setRange(-10, 100)
-        widget.setSingleStep(1)
-
-        widget.valueChanged.connect(self.value_changed)
-        widget.sliderMoved.connect(self.slider_position)
-        widget.sliderPressed.connect(self.slider_pressed)
-        widget.sliderReleased.connect(self.slider_released)
-
-        self.setCentralWidget(widget)
-
+        ** dial functions **
     def value_changed(self, i):
         print(i)
 
@@ -86,6 +103,9 @@ class MainWindow(QMainWindow):
     def slider_released(self):
         print("Released")
     """
+
+
+
 
 
 def main():

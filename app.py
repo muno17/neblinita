@@ -11,7 +11,7 @@ class Color(QWidget):
         palette = self.palette()
         palette.setColor(QPalette.ColorRole.Window, QColor(color))
         self.setPalette(palette)
-        
+
 
 class MainWindow(QMainWindow):
 
@@ -19,6 +19,9 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
 
         self.setWindowTitle("My App")
+
+        widget = Color('grey')
+        self.setCentralWidget(widget)
 
 
 app = QApplication(sys.argv)
