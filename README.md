@@ -48,9 +48,8 @@ IN PROGRESS
         - displays decibel level, similar to ableton
     - audio I/O - QComboBox for dropdown menu
         - run pa_list_devices() to get a list for inputs and outputs
-        - for inputs: regex (r"^(\d*):\s IN,.*$") - gets input number
-        - for outputs: regex (r"^(\d*):\s OUT,.*$") - gets output number
-    - info bubbles - QLabel
+        - for inputs: regex (r"^(\d*):\s IN, name: (+*),.*$") - gets inputs
+        - for outputs: regex (r"^(\d*):\s IN, name: (+*),.*$") - gets outputs
 ____________________________
 
 TO DO
