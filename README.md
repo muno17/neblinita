@@ -52,8 +52,9 @@ IN PROGRESS
         - for outputs: regex (r"^(\d*):\s IN, name: (+*),.*$") - gets outputs
 
 
-- create aggregate GUI widgetes to control:
+- create aggregate GUI widgets to control:
     - fog (distortion, noise) knob
+        - add noise to distorted signal
     - space knob (reverb and delay time)
     - disintegrate (reverb decay)
     - haze (harmonic content - chorus / delay frequency)
