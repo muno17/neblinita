@@ -35,16 +35,21 @@ class MainWindow(QMainWindow):
     """
     #function to pull the audio inputs, need to add to list and then send to QComboBox object
     #def audio_i:
-           #- for outputs: regex (r"^(\d*):\s OUT,.*$") - gets output number
-        #if matches := re.search((r"^(\d*):\s IN,.*$"), [find way to get list]):
+        i = 0
+        #if matches := re.search((r"^(\d*):\s IN, name: (+*),.*$"), [find way to get list]):
             #*matches.group(0) is an audio input*
+            list[i] = (f"{group.(0)} - {group.(1)}")
+            i += 1
         #else:
             #"select input"
 
     #function to pull the audio outputs, need to add to list and then send to QComboBox object
-    #def audio_0:
-        #if matches := re.search((r"^(\d*):\s OUT,.*$"), [find way to get list]):
+    #def audio_o:
+    i = 0
+        #if matches := re.search((r"^(\d*):\s OUT, name: (+*),.*$"), [find way to get list]):
             #*matches.group(0) is an audio input*
+            list[i] = (f"{group.(0)} - {group.(1)}")
+            i += 1
         #else:
             #"select output"
     """

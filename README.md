@@ -50,16 +50,6 @@ IN PROGRESS
         - run pa_list_devices() to get a list for inputs and outputs
         - for inputs: regex (r"^(\d*):\s IN,.*$") - gets input number
         - for outputs: regex (r"^(\d*):\s OUT,.*$") - gets output number
-        if matches := re.search((r"^(\d*):\s IN,.*$"), [find way to get list]):
-            *matches.group(0) is an audio input*
-        else:
-            "select input"
-
-
-        if matches := re.search((r"^(\d*):\s OUT,.*$"), [find way to get list]):
-            *matches.group(0) is an audio input*
-        else:
-            "select output"
     - info bubbles - QLabel
 ____________________________
 
