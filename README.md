@@ -57,7 +57,7 @@ IN PROGRESS
         - add noise to distorted signal
     - space knob (reverb and delay time)
     - disintegrate (reverb decay)
-    - haze (harmonic content - chorus / delay frequency)
+    - fractals (harmonic content - chorus / delay frequency)
     - wet/dry knob
         - dry: dry = 1, everything else = 0
         - wet: dry = 0, grimeverbs = .8, lightverbs = 1
