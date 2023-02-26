@@ -386,9 +386,3 @@ def  reverb(chorus_left, chorus_right):
 
 if __name__ == "__main__":
     main()
-
-
-
-
-if __name__ == "__main__":
-    main()
