@@ -1,6 +1,6 @@
 import sys
 from random import *
-from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QLabel, QDial, QStackedLayout
+from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QLabel, QDial, QStackedLayout, QComboBox
 from PyQt6.QtCore import QSize, Qt
 from PyQt6.QtGui import QPalette, QColor
 
@@ -12,14 +12,10 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("neblina")
         self.setFixedSize(QSize(450,300))
 
-        # create input dropdown
-        #def input()
-
-        # create output dropdown
-        #def output()
-
-        #create wet/dry knob
-        #def wet_dry()
+        self.wet_dry = QDial()
+        self.wet_dry.setNotchesVisible(True)
+        self.wet_dry.setWrapping(False)
+        self.wet_dry.move(55, 175)
 
         # create melt (disintegrate) knob
         #def melt
@@ -156,7 +152,6 @@ class MainWindow(QMainWindow):
 
 
 app = QApplication(sys.argv)
-
 window = MainWindow()
 window.show()
 
