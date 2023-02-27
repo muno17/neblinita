@@ -24,21 +24,36 @@ class _Bar(QtWidgets.QWidget):
         rect = QtCore.QRect(0, 0, painter.device().width(), painter.device().height())
         painter.fillRect(rect, brush)
         
-        # get current state *** has dial set current value ***
+        # get current state **** HAS DIAL SET CURRENT VALUE ****
         dial = self.parent()._dial
         vmin, vmax = dial.minimum(), dial.maximum()
         value = dial.value()
 
-        pen = painter.pen()
-        pen.setColor(QtGui.QColor('red'))
-        painter.setPen(pen)
+        padding = 5
+        # define our canvas
+        d_height = painter.device().height() - (padding * 2)
+        d_width = painter.device().width() - (padding * 2)
 
-        font = painter.font()
-        font.setFamily('Monaco')
-        font.setPointSize(18)
-        painter.setFont(font)
+        step_size = d_height / 5
+        bar_height = step_size * 0.6
+        bar_spacer = step_size * 0.4 / 2
 
-        painter.drawText(25, 25, "{}-->{}<--{}".format(vmin, value, vmax))
+        brush.setColor(QtGui.QColor('red'))
+
+        for n in range(5):
+            rect = QtCore.QRect(
+                padding,
+                padding + d_height - ((n + 1) * step_size) + bar_spacer,
+                d_width,
+                bar_height
+            )
+        painter.fillRect(rect, brush)
+
+
+        # **** CALCULATES NUMBER TO UPDATE WITH ****
+        pc = (value - vmin) / (vmax - vmin)
+        n_steps_to_draw = int(pc * 5)
+
         painter.end()
 
     def _trigger_refresh(self):
