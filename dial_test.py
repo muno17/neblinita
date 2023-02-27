@@ -34,27 +34,32 @@ class _Bar(QtWidgets.QWidget):
         d_height = painter.device().height() - (padding * 2)
         d_width = painter.device().width() - (padding * 2)
 
-        step_size = d_height / 5
-        bar_height = step_size * 0.6
-        bar_spacer = step_size * 0.4 / 2
+        pen = painter.pen()
+        pen.setColor(QtGui.QColor('red'))
+        painter.setPen(pen)
 
-        brush.setColor(QtGui.QColor('red'))
-
-        for n in range(5):
-            rect = QtCore.QRect(
-                padding,
-                padding + d_height - ((n + 1) * step_size) + bar_spacer,
-                d_width,
-                bar_height
-            )
-        painter.fillRect(rect, brush)
-
+        font = painter.font()
+        font.setFamily('Times')
+        font.setPointSize(18)
+        painter.setFont(font)
 
         # **** CALCULATES NUMBER TO UPDATE WITH ****
         pc = (value - vmin) / (vmax - vmin)
         n_steps_to_draw = int(pc * 5)
+        painter.drawText(25, 25, "{}".format(n_steps_to_draw))
 
         painter.end()
+
+    def __getattr__(self, name):
+        if name in self.__dict__:
+            return self[name]
+
+        try:
+            return getattr(self._dial, name)
+        except AttributeError:
+            raise AttributeError(
+            "'{}' object has no attribute '{}'".format(self.__class__.__name__, name)
+            )
 
     def _trigger_refresh(self):
         self.update()
