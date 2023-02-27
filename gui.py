@@ -14,9 +14,9 @@ class MainWindow(QtWidgets.QMainWindow):
         canvas.fill(Qt.GlobalColor.white)
         self.label.setPixmap(canvas)
         self.setCentralWidget(self.label)
-        self.draw_something()
+        self.name_font()
 
-    def draw_something(self):
+    def name_font(self):
 
         canvas = self.label.pixmap()
         painter = QtGui.QPainter(canvas)
@@ -28,10 +28,10 @@ class MainWindow(QtWidgets.QMainWindow):
         font = QtGui.QFont()
         font.setFamily('Monaco')
         font.setBold(True)
-        font.setPointSize(40)
+        font.setPointSize(30)
         painter.setFont(font)
 
-        painter.drawText(10, 50, 'neblina')
+        painter.drawText(10, 40, 'neblina')
         painter.end()
         self.label.setPixmap(canvas)
 
