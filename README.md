@@ -45,7 +45,6 @@ IN PROGRESS
 - create a GUI for control and aggregate function knobs
     - knobs or faders? - QDial, QSlider
     - display signal level - QProgressBar
-        - be able to control
         - displays decibel level, similar to ableton
     - audio I/O - QComboBox for dropdown menu
         - run pa_list_devices() to get a list for inputs and outputs
@@ -89,7 +88,7 @@ Testing
 
 - don't allow a feedback loop to be created by the computer
     - input of microphone and output of built in speaker not allowed
-    
+
 ______________________________
 Acknowledgments
 
