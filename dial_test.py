@@ -89,3 +89,32 @@ app = QtWidgets.QApplication([])
 volume = PowerBar()
 volume.show()
 app.exec()
+
+
+
+
+
+
+
+
+
+
+
+    def name_font(self):
+
+        canvas = self.label.pixmap()
+        painter = QtGui.QPainter(canvas)
+        pen = QtGui.QPen()
+        pen.setWidth(1)
+        pen.setColor(QtGui.QColor('grey'))
+        painter.setPen(pen)
+
+        font = QtGui.QFont()
+        font.setFamily('Monaco')
+        font.setBold(True)
+        font.setPointSize(30)
+        painter.setFont(font)
+
+        painter.drawText(10, 40, 'neblina')
+        painter.end()
+        self.label.setPixmap(canvas)
