@@ -45,19 +45,6 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
     """
 
-    """
-    ** basic code to create a dial **
-        widget = QDial()
-        widget.setRange(-10, 100)
-        widget.setSingleStep(1)
-
-        widget.valueChanged.connect(self.value_changed)
-        widget.sliderMoved.connect(self.slider_position)
-        widget.sliderPressed.connect(self.slider_pressed)
-        widget.sliderReleased.connect(self.slider_released)
-
-        self.setCentralWidget(widget)
-    """
 
         # add color
         win_color = Color('grey')
@@ -89,23 +76,6 @@ class MainWindow(QMainWindow):
         #else:
             #"select output"
     """
-
-    """
-        ** dial functions **
-    def value_changed(self, i):
-        print(i)
-
-    def slider_position(self, p):
-        print("position", p)
-
-    def slider_pressed(self):
-        print("Pressed!")
-
-    def slider_released(self):
-        print("Released")
-    """
-
-
 
 
 

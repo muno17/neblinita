@@ -1,44 +1,29 @@
 import sys
 
+import sys
+from PyQt6 import QtCore, QtGui, QtWidgets, uic
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QPalette, QColor
-from PyQt6.QtWidgets import (
-    QApplication,
-    QLabel,
-    QMainWindow,
-    QPushButton,
-    QTabWidget,
-    QWidget,
-)
 
-class Color(QWidget):
-
-    def __init__(self, color):
-        super(Color, self).__init__()
-        self.setAutoFillBackground(True)
-
-        palette = self.palette()
-        palette.setColor(QPalette.ColorRole.Window, QColor(color))
-        self.setPalette(palette)
-
-
-class MainWindow(QMainWindow):
+class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("My App")
+        self.label = QtWidgets.QLabel()
+        canvas = QtGui.QPixmap(500, 300)
+        canvas.fill(Qt.GlobalColor.white)
+        self.label.setPixmap(canvas)
+        self.setCentralWidget(self.label)
+        self.draw_something()
 
-        tabs = QTabWidget()
-        tabs.setTabPosition(QTabWidget.West)
-        tabs.setMovable(True)
-
-        for n, color in enumerate(["red", "green", "blue", "yellow"]):
-            tabs.addTab(Color(color), color)
-
-        self.setCentralWidget(tabs)
+    def draw_something(self):
+        canvas = self.label.pixmap()
+        painter = QtGui.QPainter(canvas)
+        painter.drawLine(10, 10, 300, 200)
+        painter.end()
+        self.label.setPixmap(canvas)
 
 
-app = QApplication(sys.argv)
+app = QtWidgets.QApplication(sys.argv)
 
 window = MainWindow()
 window.show()

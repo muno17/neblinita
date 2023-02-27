@@ -30,6 +30,7 @@ Challenges
 
 
 - implementing a way to stream live sound from an external (ob-6) source - DONE
+- customizing the effects and managing gain - DONE
 - chaining all the effect together - DONE
 - implementing a wet/dry feature
 - creating a GUI
