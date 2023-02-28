@@ -87,7 +87,7 @@ class MainWindow(QMainWindow):
         self.wet_dry.move(45, 175)
         self.wet_dry.setMinimum(1)
         self.wet_dry.setMaximum(100)
-        self.wet_dry.setValue(0)
+        self.wet_dry.setValue(1)
         self.wet_dry.valueChanged.connect(self.wet_dry_value)
 
         ### knob for melt ###
@@ -104,7 +104,7 @@ class MainWindow(QMainWindow):
         self.melt.move(45, 243)
         self.melt.setMinimum(1)
         self.melt.setMaximum(100)
-        self.melt.setValue(50)
+        self.melt.setValue(1)
         self.melt.valueChanged.connect(self.melt_value)
 
         ### knob for fractals ###
@@ -212,7 +212,7 @@ class MainWindow(QMainWindow):
         self.show()
 
     def wet_dry_value(self):
-        #print("wet/dry: ", self.wet_dry.value())
+        print("wet/dry: ", self.wet_dry.value())
         return self.wet_dry.value()
 
     def melt_value(self):
@@ -245,6 +245,10 @@ class MainWindow(QMainWindow):
 
 
 def main():
+
+    app = QApplication(sys.argv)
+    window = MainWindow()
+
     # initiate pyo server
     s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
     s.amp = 0.18
@@ -281,28 +285,22 @@ def main():
     right_lightverb = (wet_right * .6)
 
     ### mixer ###
-    #wet_dry_val = MainWindow.wet_dry_value(MainWindow.__init__.wet_dry())
-    #print(wet_dry_val)
-    wet_dry = 0
-    master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry)
+    master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, window.wet_dry_value())
     master.out()
 
-    # run a gui to keep the program running until exit command
+    # start the pyo server and execute the gui
     s.start()
-    #s.gui(timer = False, title="neblina")
-    app = QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-
     app.exec()
 
 
-def mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry):
-    dry_val = 1 - (wet_dry + 0.01)
-    lgv_val = wet_dry 
-    rgv_val = wet_dry 
-    llv_val = wet_dry 
-    rlv_val = wet_dry 
+def mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry_val):
+    wet_dry = wet_dry_val / 100
+
+    dry_val = 1 - (wet_dry - 0.01)
+    lgv_val = wet_dry - 0.01
+    rgv_val = wet_dry - 0.01
+    llv_val = wet_dry - 0.01
+    rlv_val = wet_dry - 0.01
 
     mix = Mixer(chnls=5, mul=.55)
     mix.addInput(0, dry)

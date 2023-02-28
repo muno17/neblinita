@@ -14,7 +14,7 @@ class MainWindow(QMainWindow):
         self.setStyleSheet("background-color: grey")
         self.setWindowTitle("neblina")
         self.setFixedSize(QSize(450,300))
-                
+        
         ### label - neblina ###
         self.title = QLabel("neblina", self)
         title_font = self.title.font()
