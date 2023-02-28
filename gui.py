@@ -51,11 +51,11 @@ class MainWindow(QMainWindow):
         inpt_font.setPointSize(10)
         inpt_font.setFamily('Monaco')
         self.inpt.setFont(inpt_font)
-        self.inpt.move(60, 45)
+        self.inpt.move(80, 45)
 
         self.input = QComboBox(self)
         self.input.addItems(["one, two, three"])
-        self.input.move(22, 75)
+        self.input.move(47, 75)
 
         ### output dropdown ###
         self.outpt = QLabel("output", self)
@@ -63,25 +63,24 @@ class MainWindow(QMainWindow):
         outpt_font.setPointSize(10)
         outpt_font.setFamily('Monaco')
         self.outpt.setFont(outpt_font)
-        self.outpt.move(59, 107)
+        self.outpt.move(79, 107)
 
         self.output = QComboBox(self)
         self.output.addItems(["one, two, three"])
-        self.output.move(22, 132)
-
+        self.output.move(47, 132)
 
         ### knob for wet/dry ###
-        self.wet_dry = QDial(self)
-        self.wet_dry.setNotchesVisible(True)
-        self.wet_dry.setWrapping(False)
-        self.wet_dry.move(25, 175)
-
         self.wtdry = QLabel("wet/dry", self)
         wtdry_font = self.wtdry.font()
         wtdry_font.setPointSize(10)
         wtdry_font.setFamily('Monaco')
         self.wtdry.setFont(wtdry_font)
-        self.wtdry.move(55, 202)
+        self.wtdry.move(75, 202)
+
+        self.wet_dry = QDial(self)
+        self.wet_dry.setNotchesVisible(True)
+        self.wet_dry.setWrapping(False)
+        self.wet_dry.move(45, 175)
 
         ### knob for melt ###
         self.mlt = QLabel("melt", self)
@@ -89,12 +88,12 @@ class MainWindow(QMainWindow):
         mlt_font.setPointSize(10)
         mlt_font.setFamily('Monaco')
         self.mlt.setFont(mlt_font)
-        self.mlt.move(63, 270)
+        self.mlt.move(83, 270)
 
         self.melt = QDial(self)
         self.melt.setNotchesVisible(True)
         self.melt.setWrapping(False)
-        self.melt.move(25, 243)
+        self.melt.move(45, 243)
 
         ### knob for fractals ###
         self.frctls = QLabel("fractals", self)
