@@ -84,6 +84,9 @@ class MainWindow(QMainWindow):
         self.wet_dry.setNotchesVisible(True)
         self.wet_dry.setWrapping(False)
         self.wet_dry.move(45, 175)
+        self.wet_dry.setMinimum(1)
+        self.wet_dry.setMaximum(100)
+        self.wet_dry.setValue(0)
 
         ### knob for melt ###
         self.mlt = QLabel("melt", self)
@@ -97,6 +100,9 @@ class MainWindow(QMainWindow):
         self.melt.setNotchesVisible(True)
         self.melt.setWrapping(False)
         self.melt.move(45, 243)
+        self.melt.setMinimum(1)
+        self.melt.setMaximum(100)
+        self.melt.setValue(50)
 
         ### knob for fractals ###
         self.frctls = QLabel("fractals", self)
@@ -110,6 +116,9 @@ class MainWindow(QMainWindow):
         self.fractals.setNotchesVisible(True)
         self.fractals.setWrapping(False)
         self.fractals.move(180, 107)
+        self.fractals.setMinimum(1)
+        self.fractals.setMaximum(100)
+        self.fractals.setValue(50)
 
         ### knob for luz delay ###
         self.ldly = QLabel("delay", self)
@@ -123,6 +132,9 @@ class MainWindow(QMainWindow):
         self.luz_delay.setNotchesVisible(True)
         self.luz_delay.setWrapping(False)
         self.luz_delay.move(180, 175)
+        self.luz_delay.setMinimum(1)
+        self.luz_delay.setMaximum(100)
+        self.luz_delay.setValue(50)
 
         ### knob for luz space ###
         self.lspc = QLabel("space", self)
@@ -136,6 +148,9 @@ class MainWindow(QMainWindow):
         self.luz_space.setNotchesVisible(True)
         self.luz_space.setWrapping(False)
         self.luz_space.move(180, 243)
+        self.luz_space.setMinimum(1)
+        self.luz_space.setMaximum(100)
+        self.luz_space.setValue(50)
 
         ### knob for haze ###
         self.hze = QLabel("haze", self)
@@ -149,6 +164,9 @@ class MainWindow(QMainWindow):
         self.haze.setNotchesVisible(True)
         self.haze.setWrapping(False)
         self.haze.move(309, 107)
+        self.haze.setMinimum(1)
+        self.haze.setMaximum(100)
+        self.haze.setValue(0)
 
         ### knob for sombra delay ###
         self.sdly = QLabel("delay", self)
@@ -162,6 +180,9 @@ class MainWindow(QMainWindow):
         self.sombra_delay.setNotchesVisible(True)
         self.sombra_delay.setWrapping(False)
         self.sombra_delay.move(309, 175)
+        self.sombra_delay.setMinimum(1)
+        self.sombra_delay.setMaximum(100)
+        self.sombra_delay.setValue(50)
 
         ### knob for sombra space ###
         self.sspc = QLabel("space", self)
@@ -171,10 +192,13 @@ class MainWindow(QMainWindow):
         self.sspc.setFont(sspc_font)
         self.sspc.move(344, 270)
 
-        self.luz_space = QDial(self)
-        self.luz_space.setNotchesVisible(True)
-        self.luz_space.setWrapping(False)
-        self.luz_space.move(309, 243)
+        self.sombra_space = QDial(self)
+        self.sombra_space.setNotchesVisible(True)
+        self.sombra_space.setWrapping(False)
+        self.sombra_space.move(309, 243)
+        self.sombra_space.setMinimum(1)
+        self.sombra_space.setMaximum(100)
+        self.sombra_space.setValue(50)
 
         self.show()
 #def_knobs

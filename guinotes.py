@@ -43,3 +43,23 @@
         #else:
             #"select output"
     """
+
+
+"""
+slot - responds when something happens
+ex. def Button_clicked():
+    print("button clicked")
+
+app = QApplication()
+button = QPushButton("press me")
+
+#wire  a slot to a signal using syntax below:
+button.clicked.connect(button_clicked)
+
+button.show()
+app.exec()
+
+*** QDials
+    -  only outputs ints
+    - will need to divide by 100.0 to get floats to pass to effects components 
+"""
