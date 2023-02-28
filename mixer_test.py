@@ -5,7 +5,7 @@ import random
 def main():
     # initiate server
     s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
-    s.amp = 0.17
+    s.amp = 0.18
     # set the input device
     s.setInputDevice(1) # zoom
     # set the output device
@@ -335,7 +335,6 @@ def  reverb(chorus_left, chorus_right):
     right_lowp = Tone(right_all2, freq=3500, mul=0.25)
 
     return left_lowp, right_lowp
-
 
 
 if __name__ == "__main__":
