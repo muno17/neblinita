@@ -8,8 +8,8 @@ import sys
 
 # main window for gui
 class MainWindow(QMainWindow):
-    def __init__(self):
-        super(MainWindow, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super(MainWindow, self).__init__(*args, **kwargs)
 
         self.setStyleSheet("background-color: grey")
         self.setWindowTitle("neblina")
@@ -72,6 +72,7 @@ class MainWindow(QMainWindow):
         self.output.addItems(["one, two, three"])
         self.output.move(47, 132)
 
+
         ### knob for wet/dry ###
         self.wtdry = QLabel("wet/dry", self)
         wtdry_font = self.wtdry.font()
@@ -87,6 +88,7 @@ class MainWindow(QMainWindow):
         self.wet_dry.setMinimum(1)
         self.wet_dry.setMaximum(100)
         self.wet_dry.setValue(0)
+        self.wet_dry.valueChanged.connect(self.wet_dry_value)
 
         ### knob for melt ###
         self.mlt = QLabel("melt", self)
@@ -201,7 +203,12 @@ class MainWindow(QMainWindow):
         self.sombra_space.setValue(50)
 
         self.show()
-#def_knobs
+
+    def wet_dry_value(self):
+        #print(self.wet_dry.value())
+        return self.wet_dry.value()
+
+
 
 def main():
     # initiate server
@@ -241,7 +248,9 @@ def main():
     right_lightverb = (wet_right * .6)
 
     ### mixer ###
-    wet_dry = (MainWindow.__init__.wet_dry.valueChanged.connect(wet_dry_knob)) / 100.0
+    wet_dry_val = MainWindow.wet_dry_value()
+    print(wet_dry_val)
+    wet_dry = 0
     master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry)
     master.out()
 
@@ -259,11 +268,11 @@ def main():
 
 
 def mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry):
-    dry_val = 1 - wet_dry
-    lgv_val = wet_dry - 0.2 
-    rgv_val = wet_dry - 0.2
-    llv_val = wet_dry - 0.1
-    rlv_val = wet_dry - 0.1
+    dry_val = 1 - (wet_dry + 0.01)
+    lgv_val = wet_dry 
+    rgv_val = wet_dry 
+    llv_val = wet_dry 
+    rlv_val = wet_dry 
 
     mix = Mixer(chnls=5, mul=.55)
     mix.addInput(0, dry)
@@ -278,15 +287,6 @@ def mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, w
     mix.setAmp(4, 0, rlv_val) # right_lightverb - .6 50% wet
 
     return mix
-
-
-
-
-
-
-
-
-
 
 
 
