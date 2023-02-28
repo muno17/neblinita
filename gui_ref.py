@@ -15,7 +15,6 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("neblina")
         self.setFixedSize(QSize(450,300))
                 
-
         ### label - neblina ###
         self.title = QLabel("neblina", self)
         title_font = self.title.font()
@@ -72,22 +71,6 @@ class MainWindow(QMainWindow):
         self.output.addItems(["one, two, three"])
         self.output.move(47, 132)
 
-        ### knob for wet/dry ###
-        self.wtdry = QLabel("wet/dry", self)
-        wtdry_font = self.wtdry.font()
-        wtdry_font.setPointSize(10)
-        wtdry_font.setFamily('Monaco')
-        self.wtdry.setFont(wtdry_font)
-        self.wtdry.move(75, 202)
-
-        self.wet_dry = QDial(self)
-        self.wet_dry.setNotchesVisible(True)
-        self.wet_dry.setWrapping(False)
-        self.wet_dry.move(45, 175)
-        self.wet_dry.setMinimum(1)
-        self.wet_dry.setMaximum(100)
-        self.wet_dry.setValue(0)
-
         ### knob for melt ###
         self.mlt = QLabel("melt", self)
         mlt_font = self.mlt.font()
@@ -100,9 +83,19 @@ class MainWindow(QMainWindow):
         self.melt.setNotchesVisible(True)
         self.melt.setWrapping(False)
         self.melt.move(45, 243)
-        self.melt.setMinimum(1)
-        self.melt.setMaximum(100)
-        self.melt.setValue(50)
+
+        ### knob for wet/dry ###
+        self.wtdry = QLabel("wet/dry", self)
+        wtdry_font = self.wtdry.font()
+        wtdry_font.setPointSize(10)
+        wtdry_font.setFamily('Monaco')
+        self.wtdry.setFont(wtdry_font)
+        self.wtdry.move(75, 202)
+
+        self.wet_dry = QDial(self)
+        self.wet_dry.setNotchesVisible(True)
+        self.wet_dry.setWrapping(False)
+        self.wet_dry.move(45, 175)
 
         ### knob for fractals ###
         self.frctls = QLabel("fractals", self)
@@ -116,9 +109,6 @@ class MainWindow(QMainWindow):
         self.fractals.setNotchesVisible(True)
         self.fractals.setWrapping(False)
         self.fractals.move(180, 107)
-        self.fractals.setMinimum(1)
-        self.fractals.setMaximum(100)
-        self.fractals.setValue(50)
 
         ### knob for luz delay ###
         self.ldly = QLabel("delay", self)
@@ -132,9 +122,6 @@ class MainWindow(QMainWindow):
         self.luz_delay.setNotchesVisible(True)
         self.luz_delay.setWrapping(False)
         self.luz_delay.move(180, 175)
-        self.luz_delay.setMinimum(1)
-        self.luz_delay.setMaximum(100)
-        self.luz_delay.setValue(50)
 
         ### knob for luz space ###
         self.lspc = QLabel("space", self)
@@ -148,9 +135,6 @@ class MainWindow(QMainWindow):
         self.luz_space.setNotchesVisible(True)
         self.luz_space.setWrapping(False)
         self.luz_space.move(180, 243)
-        self.luz_space.setMinimum(1)
-        self.luz_space.setMaximum(100)
-        self.luz_space.setValue(50)
 
         ### knob for haze ###
         self.hze = QLabel("haze", self)
@@ -164,9 +148,6 @@ class MainWindow(QMainWindow):
         self.haze.setNotchesVisible(True)
         self.haze.setWrapping(False)
         self.haze.move(309, 107)
-        self.haze.setMinimum(1)
-        self.haze.setMaximum(100)
-        self.haze.setValue(0)
 
         ### knob for sombra delay ###
         self.sdly = QLabel("delay", self)
@@ -180,9 +161,6 @@ class MainWindow(QMainWindow):
         self.sombra_delay.setNotchesVisible(True)
         self.sombra_delay.setWrapping(False)
         self.sombra_delay.move(309, 175)
-        self.sombra_delay.setMinimum(1)
-        self.sombra_delay.setMaximum(100)
-        self.sombra_delay.setValue(50)
 
         ### knob for sombra space ###
         self.sspc = QLabel("space", self)
@@ -192,15 +170,13 @@ class MainWindow(QMainWindow):
         self.sspc.setFont(sspc_font)
         self.sspc.move(344, 270)
 
-        self.sombra_space = QDial(self)
-        self.sombra_space.setNotchesVisible(True)
-        self.sombra_space.setWrapping(False)
-        self.sombra_space.move(309, 243)
-        self.sombra_space.setMinimum(1)
-        self.sombra_space.setMaximum(100)
-        self.sombra_space.setValue(50)
+        self.luz_space = QDial(self)
+        self.luz_space.setNotchesVisible(True)
+        self.luz_space.setWrapping(False)
+        self.luz_space.move(309, 243)
 
         self.show()
+    
 #def_knobs
 
 def main():
@@ -241,8 +217,17 @@ def main():
     right_lightverb = (wet_right * .6)
 
     ### mixer ###
-    wet_dry = (MainWindow.__init__.wet_dry.valueChanged.connect(wet_dry_knob)) / 100.0
-    master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry)
+    master = Mixer(chnls=5, mul=.55)
+    master.addInput(0, dry)
+    master.addInput(1, left_grimeverb)
+    master.addInput(2, right_grimeverb)
+    master.addInput(3, left_lightverb)
+    master.addInput(4, right_lightverb)
+    master.setAmp(0, 0, .25) # dry  - .25 50% wet
+    master.setAmp(1, 0, .5) # left_grimeverb - .5 50% wet
+    master.setAmp(2, 0, .5) # right_grimeverb - .5 50% wet
+    master.setAmp(3, 0, .6) # left_lightverb - .6 50% wet
+    master.setAmp(4, 0, .6) # right_lightverb - .6 50% wet
     master.out()
 
     # run a gui to keep the program running until exit command
@@ -256,39 +241,6 @@ def main():
 
     # If your final output uses less channels than the number of audio streams in an object, don’t 
     # forget to mix it down (call its mix() method) before applying effects on the sum of the signals.
-
-
-def mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry):
-    dry_val = 1 - wet_dry
-    lgv_val = wet_dry - 0.2 
-    rgv_val = wet_dry - 0.2
-    llv_val = wet_dry - 0.1
-    rlv_val = wet_dry - 0.1
-
-    mix = Mixer(chnls=5, mul=.55)
-    mix.addInput(0, dry)
-    mix.addInput(1, left_grimeverb)
-    mix.addInput(2, right_grimeverb)
-    mix.addInput(3, left_lightverb)
-    mix.addInput(4, right_lightverb)
-    mix.setAmp(0, 0, dry_val) # dry  - .25 50% wet
-    mix.setAmp(1, 0, lgv_val) # left_grimeverb - .5 50% wet
-    mix.setAmp(2, 0, rgv_val) # right_grimeverb - .5 50% wet
-    mix.setAmp(3, 0, llv_val) # left_lightverb - .6 50% wet
-    mix.setAmp(4, 0, rlv_val) # right_lightverb - .6 50% wet
-
-    return mix
-
-
-
-
-
-
-
-
-
-
-
 
 
 def distortion(wet_path1):

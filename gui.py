@@ -16,6 +16,8 @@ class MainWindow(QMainWindow):
         self.setFixedSize(QSize(450,300))
                 
 
+
+
         ### label - neblina ###
         self.title = QLabel("neblina", self)
         title_font = self.title.font()
@@ -71,19 +73,6 @@ class MainWindow(QMainWindow):
         self.output = QComboBox(self)
         self.output.addItems(["one, two, three"])
         self.output.move(47, 132)
-
-        ### knob for wet/dry ###
-        self.wtdry = QLabel("wet/dry", self)
-        wtdry_font = self.wtdry.font()
-        wtdry_font.setPointSize(10)
-        wtdry_font.setFamily('Monaco')
-        self.wtdry.setFont(wtdry_font)
-        self.wtdry.move(75, 202)
-
-        self.wet_dry = QDial(self)
-        self.wet_dry.setNotchesVisible(True)
-        self.wet_dry.setWrapping(False)
-        self.wet_dry.move(45, 175)
 
         ### knob for melt ###
         self.mlt = QLabel("melt", self)
@@ -177,6 +166,24 @@ class MainWindow(QMainWindow):
         self.luz_space.move(309, 243)
 
         self.show()
+    
+    def wet_dry():
+        ### knob for wet/dry ###
+        self.wtdry = QLabel("wet/dry", self)
+        wtdry_font = self.wtdry.font()
+        wtdry_font.setPointSize(10)
+        wtdry_font.setFamily('Monaco')
+        self.wtdry.setFont(wtdry_font)
+        self.wtdry.move(75, 202)
+
+        self.wet_dry = QDial(self)
+        self.wet_dry.setNotchesVisible(True)
+        self.wet_dry.setWrapping(False)
+        self.wet_dry.move(45, 175)
+
+        self.show
+
+        return wet_dry.ValueChanged()
 #def_knobs
 
 def main():
