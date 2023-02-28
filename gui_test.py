@@ -1,88 +1,188 @@
 from pyo import *
-from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QPushButton
+from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QLabel, QDial, QStackedLayout, QComboBox
 from PyQt6.QtCore import QSize, Qt
 from PyQt6.QtGui import QPalette, QColor
 import time
 import random
 import sys
 
-# class to create color for window
-class Color(QWidget):
-
-    def __init__(self, color):
-        super(Color, self).__init__()
-        self.setAutoFillBackground(True)
-
-        palette = self.palette()
-        palette.setColor(QPalette.ColorRole.Window, QColor(color))
-        self.setPalette(palette)
-
-
-# Subclass QMainWindow to customize your application's main window
+# main window for gui
 class MainWindow(QMainWindow):
     def __init__(self):
-        super().__init__()
+        super(MainWindow, self).__init__()
 
+        self.setStyleSheet("background-color: grey")
         self.setWindowTitle("neblina")
-        self.setFixedSize(QSize(500,300))
+        self.setFixedSize(QSize(450,300))
+                
 
-    """
-    ** basic code to create a dropdown, will need  one for both input and output **
+        ### label - neblina ###
+        self.title = QLabel("neblina", self)
+        title_font = self.title.font()
+        title_font.setPointSize(24)
+        title_font.setFamily('Monaco')
+        self.title.setFont(title_font)
+        self.title.move(15, 10)
 
-     widget = QComboBox()
-        widget.addItems(["One", "Two", "Three"])
-        ### use a loop to add items from list:
-        i = len(inputs)
-        for _ in range(i):
-            widget.addItems(inputs[i]) 
+        ### label - muno ###
+        self.muno = QLabel("muno audio", self)
+        muno_font = self.muno.font()
+        muno_font.setPointSize(16)
+        muno_font.setFamily('Monaco')
+        self.muno.setFont(muno_font)
+        self.muno.move(330, 10)
 
-        # sends the current index (position) of the selected item.
-        widget.currentIndexChanged.connect( self.index_changed)
+        ### label - luz ###
+        self.luz = QLabel("luz", self)
+        luz_font = self.luz.font()
+        luz_font.setPointSize(18)
+        luz_font.setFamily('Monaco')
+        self.luz.setFont(luz_font)
+        self.luz.move(214, 65)
 
-        #There is an alternate signal to send the text.
-        widget.currentTextChanged.connect( self.text_changed )
+        ### label - sombra ###
+        self.sombra = QLabel("sombra", self)
+        sombra_font = self.sombra.font()
+        sombra_font.setPointSize(18)
+        sombra_font.setFamily('Monaco')
+        self.sombra.setFont(sombra_font)
+        self.sombra.move(325, 65)
 
-        self.setCentralWidget(widget)
-    """
+        ### input dropdown ###
+        self.inpt = QLabel("input", self)
+        inpt_font = self.inpt.font()
+        inpt_font.setPointSize(10)
+        inpt_font.setFamily('Monaco')
+        self.inpt.setFont(inpt_font)
+        self.inpt.move(80, 45)
 
+        self.input = QComboBox(self)
+        self.input.addItems(["one, two, three"])
+        self.input.move(47, 75)
 
-        # add color
-        win_color = Color('grey')
-        # Set the central widget of the Window.
-        self.setCentralWidget(win_color)
+        ### output dropdown ###
+        self.outpt = QLabel("output", self)
+        outpt_font = self.outpt.font()
+        outpt_font.setPointSize(10)
+        outpt_font.setFamily('Monaco')
+        self.outpt.setFont(outpt_font)
+        self.outpt.move(79, 107)
 
-    """
-    I/O functions
+        self.output = QComboBox(self)
+        self.output.addItems(["one, two, three"])
+        self.output.move(47, 132)
 
-    #function to pull the audio inputs, need to add to list and then send to QComboBox object
-    #def audio_i:
-        i = 0
-        inputs = []
-        #if matches := re.search((r"^(\d*):\s IN, name: (+*),.*$"), [find way to get list]):
-            #*matches.group(0) is an audio input*
-            inputs[i] = (f"{group.(0)} - {group.(1)}")
-            i += 1
-        #else:
-            #"select input"
+        ### knob for wet/dry ###
+        self.wtdry = QLabel("wet/dry", self)
+        wtdry_font = self.wtdry.font()
+        wtdry_font.setPointSize(10)
+        wtdry_font.setFamily('Monaco')
+        self.wtdry.setFont(wtdry_font)
+        self.wtdry.move(75, 202)
 
-    #function to pull the audio outputs, need to add to list and then send to QComboBox object
-    #def audio_o:
-        i = 0
-        outputs = []
-        if matches := re.search((r"^(\d*):\s OUT, name: (+*),.*$"), [find way to get list]):
-            #*matches.group(0) is an audio input*
-            outputs[i] = (f"{group.(0)} - {group.(1)}")
-            i += 1
-        #else:
-            #"select output"
-    """
+        self.wet_dry = QDial(self)
+        self.wet_dry.setNotchesVisible(True)
+        self.wet_dry.setWrapping(False)
+        self.wet_dry.move(45, 175)
 
+        ### knob for melt ###
+        self.mlt = QLabel("melt", self)
+        mlt_font = self.mlt.font()
+        mlt_font.setPointSize(10)
+        mlt_font.setFamily('Monaco')
+        self.mlt.setFont(mlt_font)
+        self.mlt.move(83, 270)
 
+        self.melt = QDial(self)
+        self.melt.setNotchesVisible(True)
+        self.melt.setWrapping(False)
+        self.melt.move(45, 243)
+
+        ### knob for fractals ###
+        self.frctls = QLabel("fractals", self)
+        frctls_font = self.frctls.font()
+        frctls_font.setPointSize(10)
+        frctls_font.setFamily('Monaco')
+        self.frctls.setFont(frctls_font)
+        self.frctls.move(208, 134)
+
+        self.fractals = QDial(self)
+        self.fractals.setNotchesVisible(True)
+        self.fractals.setWrapping(False)
+        self.fractals.move(180, 107)
+
+        ### knob for luz delay ###
+        self.ldly = QLabel("delay", self)
+        ldly_font = self.ldly.font()
+        ldly_font.setPointSize(10)
+        ldly_font.setFamily('Monaco')
+        self.ldly.setFont(ldly_font)
+        self.ldly.move(215, 202)
+
+        self.luz_delay = QDial(self)
+        self.luz_delay.setNotchesVisible(True)
+        self.luz_delay.setWrapping(False)
+        self.luz_delay.move(180, 175)
+
+        ### knob for luz space ###
+        self.lspc = QLabel("space", self)
+        lspc_font = self.lspc.font()
+        lspc_font.setPointSize(10)
+        lspc_font.setFamily('Monaco')
+        self.lspc.setFont(lspc_font)
+        self.lspc.move(215, 270)
+
+        self.luz_space = QDial(self)
+        self.luz_space.setNotchesVisible(True)
+        self.luz_space.setWrapping(False)
+        self.luz_space.move(180, 243)
+
+        ### knob for haze ###
+        self.hze = QLabel("haze", self)
+        hze_font = self.hze.font()
+        hze_font.setPointSize(10)
+        hze_font.setFamily('Monaco')
+        self.hze.setFont(hze_font)
+        self.hze.move(348, 134)
+
+        self.haze = QDial(self)
+        self.haze.setNotchesVisible(True)
+        self.haze.setWrapping(False)
+        self.haze.move(309, 107)
+
+        ### knob for sombra delay ###
+        self.sdly = QLabel("delay", self)
+        sdly_font = self.sdly.font()
+        sdly_font.setPointSize(10)
+        sdly_font.setFamily('Monaco')
+        self.sdly.setFont(sdly_font)
+        self.sdly.move(345, 202)
+
+        self.sombra_delay = QDial(self)
+        self.sombra_delay.setNotchesVisible(True)
+        self.sombra_delay.setWrapping(False)
+        self.sombra_delay.move(309, 175)
+
+        ### knob for sombra space ###
+        self.sspc = QLabel("space", self)
+        sspc_font = self.sspc.font()
+        sspc_font.setPointSize(10)
+        sspc_font.setFamily('Monaco')
+        self.sspc.setFont(sspc_font)
+        self.sspc.move(344, 270)
+
+        self.luz_space = QDial(self)
+        self.luz_space.setNotchesVisible(True)
+        self.luz_space.setWrapping(False)
+        self.luz_space.move(309, 243)
+
+        self.show()
+#def_knobs
 
 def main():
     # initiate server
     s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
-    s.amp = 0.2
+    s.amp = 0.18
     # set the input device
     s.setInputDevice(1) # zoom
     # set the output device
@@ -99,16 +199,16 @@ def main():
     # create copy of input for light reverb
     wet_path2 = dry
 
-    ### signal chain for fog reverb ###
+    ### signal chain for sombra reverb ###
     distortion_out = distortion(wet_path1)
     left_distdelay, right_distdelay = distdelay(distortion_out, buftime)
     left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
     left_gv, right_gv = grimeverb(left_dirtdelay, right_dirtdelay)
-    left_grimeverb = (left_gv * .65)
-    right_grimeverb = (right_gv * .65)
+    left_grimeverb = (left_gv * .5)
+    right_grimeverb = (right_gv * .5)
 
 
-    ### signal chain for light reverb ###
+    ### signal chain for luz reverb ###
     delay1_left, delay1_right = delay1(wet_path2, buftime)
     delay2_left, delay2_right = delay2(delay1_left, delay1_right, buftime)
     chorus_left, chorus_right = chorus(delay2_left, delay2_right)
@@ -117,22 +217,27 @@ def main():
     right_lightverb = (wet_right * .6)
 
     ### mixer ###
-    master = Mixer(chnls=5, mul=.5)
+    master = Mixer(chnls=5, mul=.55)
     master.addInput(0, dry)
     master.addInput(1, left_grimeverb)
     master.addInput(2, right_grimeverb)
     master.addInput(3, left_lightverb)
     master.addInput(4, right_lightverb)
-    master.setAmp(0, 0, .25) # dry
-    master.setAmp(1, 0, .6) # left_grimeverb
-    master.setAmp(2, 0, .6) # right_grimeverb
-    master.setAmp(3, 0, .9) # left_lightverb
-    master.setAmp(4, 0, .9) # right_lightverb
+    master.setAmp(0, 0, .25) # dry  - .25 50% wet
+    master.setAmp(1, 0, .5) # left_grimeverb - .5 50% wet
+    master.setAmp(2, 0, .5) # right_grimeverb - .5 50% wet
+    master.setAmp(3, 0, .6) # left_lightverb - .6 50% wet
+    master.setAmp(4, 0, .6) # right_lightverb - .6 50% wet
     master.out()
-    
+
     # run a gui to keep the program running until exit command
     s.start()
-    s.gui(timer = False, title="neblina")
+    #s.gui(timer = False, title="neblina")
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+
+    app.exec()
 
     # If your final output uses less channels than the number of audio streams in an object, don’t 
     # forget to mix it down (call its mix() method) before applying effects on the sum of the signals.
@@ -145,6 +250,7 @@ def distortion(wet_path1):
     BOOST = 25  # Pre-boost (linear gain).
     LP_CUTOFF_FREQ = 3000  # Lowpass filter cutoff frequency.
     BALANCE = 0.9  # Balance dry - wet.
+
 
     # The transfert function is build in two phases.
     # 1. Transfert function for signal lower than 0.
@@ -176,6 +282,8 @@ def distortion(wet_path1):
 
 
 def distdelay(distortion_out, buftime):
+    noise = BrownNoise(0.4)
+    
     # Delay parameters
     delay_time_l = Sig(0.08)  # Delay time for the left channel delay.
     delay_feed = Sig(0.3)  # Feedback value for both delays.
@@ -203,7 +311,13 @@ def distdelay(distortion_out, buftime):
     # Change the right delay input (now that the left delay exists).
     right.setInput(original_delayed + left * delay_feed)
 
-    return left, right
+    dleft = Disto(left, drive=0.0, slope=.8)
+    dright = Disto(left, drive=0.0, slope=.8)
+
+    dleft.setDrive(0.0) # controlled by haze
+    dright.setDrive(0.0) # controlled by haze
+
+    return dleft, dright
 
     
 def dirtdelay(left_distdelay, right_distdelay, buftime):

@@ -174,6 +174,7 @@ class MainWindow(QMainWindow):
         self.luz_space.move(309, 243)
 
         self.show()
+#def_knobs
 
 
 app = QApplication(sys.argv)

@@ -37,13 +37,12 @@ Challenges
     - dropdowns for interactive I/O
     - knobs for aggregate functions
     - signal output visualizer and control
-    - info bubbles for each widget giving brief explanation
 ____________________________
 
 IN PROGRESS
 
 - create a GUI for control and aggregate function knobs
-    - knobs or faders? - QDial, QSlider
+    - knobs - QDial DONE
     - display signal level - QProgressBar
         - displays decibel level, similar to ableton
     - audio I/O - QComboBox for dropdown menu
@@ -53,10 +52,10 @@ IN PROGRESS
 
 
 - create aggregate GUI widgets to control:
-    - fog (distortion, noise) knob
-        - add noise to distorted signal
+    - fog (distortion) knob
+        - add distortion to distdelay
     - space knob (reverb and delay time)
-    - disintegrate (reverb decay)
+    - melt (reverb decay)
     - fractals (harmonic content - chorus / delay frequency)
     - wet/dry knob
         - dry: dry = 1, everything else = 0
