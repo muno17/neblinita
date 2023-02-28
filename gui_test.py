@@ -245,7 +245,7 @@ class MainWindow(QMainWindow):
 
 
 def main():
-    # initiate server
+    # initiate pyo server
     s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
     s.amp = 0.18
     # set the input device
@@ -271,7 +271,6 @@ def main():
     left_gv, right_gv = grimeverb(left_dirtdelay, right_dirtdelay)
     left_grimeverb = (left_gv * .5)
     right_grimeverb = (right_gv * .5)
-
 
     ### signal chain for luz reverb ###
     delay1_left, delay1_right = delay1(wet_path2, buftime)
@@ -318,6 +317,7 @@ def mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, w
     mix.setAmp(4, 0, rlv_val) # right_lightverb - .6 50% wet
 
     return mix
+
 
 def distortion(wet_path1):
     # Distortion parameters
