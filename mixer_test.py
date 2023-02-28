@@ -5,7 +5,7 @@ import random
 def main():
     # initiate server
     s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
-    s.amp = 0.2
+    s.amp = 0.17
     # set the input device
     s.setInputDevice(1) # zoom
     # set the output device

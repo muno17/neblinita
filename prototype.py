@@ -1,12 +1,11 @@
 from pyo import *
 import time
 import random
-import psutil
 
 def main():
     # initiate server
     s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
-    s.amp = 0.15
+    s.amp = 0.17
     # set the input device
     s.setInputDevice(1) # zoom
     # set the output device
@@ -23,14 +22,14 @@ def main():
     # create copy of input for light reverb
     wet_path2 = dry
 
-
     ### signal chain for fog reverb ###
     distortion_out = distortion(wet_path1)
     left_distdelay, right_distdelay = distdelay(distortion_out, buftime)
     left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
     left_gv, right_gv = grimeverb(left_dirtdelay, right_dirtdelay)
-    left_grimeverb = (left_gv * .65)
-    right_grimeverb = (right_gv * .65)
+    left_grimeverb = (left_gv * .5)
+    right_grimeverb = (right_gv * .5)
+
 
     ### signal chain for light reverb ###
     delay1_left, delay1_right = delay1(wet_path2, buftime)
@@ -41,7 +40,7 @@ def main():
     right_lightverb = (wet_right * .6)
 
     ### mixer ###
-    master = Mixer(chnls=5, mul=.5)
+    master = Mixer(chnls=5, mul=.55)
     master.addInput(0, dry)
     master.addInput(1, left_grimeverb)
     master.addInput(2, right_grimeverb)
@@ -54,10 +53,16 @@ def main():
     master.setAmp(4, 0, .6) # right_lightverb - .6 50% wet
     master.out()
 
+
+    #master.out()
+    
     # run a gui to keep the program running until exit command
     s.start()
-    s.gui(locals())
-    
+    s.gui(timer = False, title="neblina")
+
+    # If your final output uses less channels than the number of audio streams in an object, don’t 
+    # forget to mix it down (call its mix() method) before applying effects on the sum of the signals.
+
 
 def distortion(wet_path1):
     # Distortion parameters
@@ -66,6 +71,7 @@ def distortion(wet_path1):
     BOOST = 25  # Pre-boost (linear gain).
     LP_CUTOFF_FREQ = 3000  # Lowpass filter cutoff frequency.
     BALANCE = 0.9  # Balance dry - wet.
+
 
     # The transfert function is build in two phases.
     # 1. Transfert function for signal lower than 0.
@@ -97,11 +103,16 @@ def distortion(wet_path1):
 
 
 def distdelay(distortion_out, buftime):
+    noise = BrownNoise(0.4)
+    
     # Delay parameters
     delay_time_l = Sig(0.08)  # Delay time for the left channel delay.
     delay_feed = Sig(0.3)  # Feedback value for both delays.
 
-    # buffer compensation
+    # Because the right delay gets its input sound from the left delay, while
+    # it is computed before (to send its output sound to the left delay), it
+    # will be one buffer size late. To compensate this additional delay on the
+    # right, we substract one buffer size from the real delay time.
     delay_time_r = Sig(delay_time_l, add=-buftime)
 
     # Initialize the right delay with zeros as input because the left delay
@@ -112,13 +123,22 @@ def distdelay(distortion_out, buftime):
     # delay signal (multiplied by the feedback value) as input.
     left = Delay(distortion_out + right * delay_feed, delay=delay_time_l)
 
-    # non-recursive delay fed to right output
+    # One issue with recursive cross-delay is if we set the feedback to
+    # 0, the right delay never gets any signal. To resolve this, we add a
+    # non-recursive delay, with a gain that is the inverse of the feedback,
+    # to the right delay input.
     original_delayed = Delay(distortion_out, delay_time_l, mul=1 - delay_feed)
 
     # Change the right delay input (now that the left delay exists).
     right.setInput(original_delayed + left * delay_feed)
 
-    return left, right
+    dleft = Disto(left, drive=0.0, slope=.8)
+    dright = Disto(left, drive=0.0, slope=.8)
+
+    dleft.setDrive(0.0) # controlled by haze
+    dright.setDrive(0.0) # controlled by haze
+
+    return dleft, dright
 
     
 def dirtdelay(left_distdelay, right_distdelay, buftime):
@@ -266,6 +286,7 @@ def delay2(delay1_left, delay1_right, buftime):
 
 
 def chorus(delay_left, delay_right):
+    # Sets values for 8 LFO'ed delay lines (you can add more if you want!).
     # LFO frequencies.
     freqs = [0.254, 0.465, 0.657, 0.879, 1.23, 1.342, 1.654, 1.879]
     # Center delays in seconds.
@@ -314,6 +335,7 @@ def  reverb(chorus_left, chorus_right):
     right_lowp = Tone(right_all2, freq=3500, mul=0.25)
 
     return left_lowp, right_lowp
+
 
 
 if __name__ == "__main__":
