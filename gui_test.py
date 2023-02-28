@@ -241,17 +241,8 @@ def main():
     right_lightverb = (wet_right * .6)
 
     ### mixer ###
-    master = Mixer(chnls=5, mul=.55)
-    master.addInput(0, dry)
-    master.addInput(1, left_grimeverb)
-    master.addInput(2, right_grimeverb)
-    master.addInput(3, left_lightverb)
-    master.addInput(4, right_lightverb)
-    master.setAmp(0, 0, .25) # dry  - .25 50% wet
-    master.setAmp(1, 0, .5) # left_grimeverb - .5 50% wet
-    master.setAmp(2, 0, .5) # right_grimeverb - .5 50% wet
-    master.setAmp(3, 0, .6) # left_lightverb - .6 50% wet
-    master.setAmp(4, 0, .6) # right_lightverb - .6 50% wet
+    #MainWindow.wet_dry.valueChanged.connect(wet_dry_knob)
+    master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb)
     master.out()
 
     # run a gui to keep the program running until exit command
@@ -265,6 +256,34 @@ def main():
 
     # If your final output uses less channels than the number of audio streams in an object, don’t 
     # forget to mix it down (call its mix() method) before applying effects on the sum of the signals.
+
+
+def mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb):
+
+    mix = Mixer(chnls=5, mul=.55)
+    mix.addInput(0, dry)
+    mix.addInput(1, left_grimeverb)
+    mix.addInput(2, right_grimeverb)
+    mix.addInput(3, left_lightverb)
+    mix.addInput(4, right_lightverb)
+    mix.setAmp(0, 0, .25) # dry  - .25 50% wet
+    mix.setAmp(1, 0, .5) # left_grimeverb - .5 50% wet
+    mix.setAmp(2, 0, .5) # right_grimeverb - .5 50% wet
+    mix.setAmp(3, 0, .6) # left_lightverb - .6 50% wet
+    mix.setAmp(4, 0, .6) # right_lightverb - .6 50% wet
+
+    return mix
+
+
+
+
+
+
+
+
+
+
+
 
 
 def distortion(wet_path1):
