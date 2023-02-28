@@ -105,6 +105,7 @@ class MainWindow(QMainWindow):
         self.melt.setMinimum(1)
         self.melt.setMaximum(100)
         self.melt.setValue(50)
+        self.melt.valueChanged.connect(self.melt_value)
 
         ### knob for fractals ###
         self.frctls = QLabel("fractals", self)
@@ -121,6 +122,7 @@ class MainWindow(QMainWindow):
         self.fractals.setMinimum(1)
         self.fractals.setMaximum(100)
         self.fractals.setValue(50)
+        self.fractals.valueChanged.connect(self.fractals_value)
 
         ### knob for luz delay ###
         self.ldly = QLabel("delay", self)
@@ -137,6 +139,7 @@ class MainWindow(QMainWindow):
         self.luz_delay.setMinimum(1)
         self.luz_delay.setMaximum(100)
         self.luz_delay.setValue(50)
+        self.luz_delay.valueChanged.connect(self.luz_delay_value)
 
         ### knob for luz space ###
         self.lspc = QLabel("space", self)
@@ -153,6 +156,7 @@ class MainWindow(QMainWindow):
         self.luz_space.setMinimum(1)
         self.luz_space.setMaximum(100)
         self.luz_space.setValue(50)
+        self.luz_space.valueChanged.connect(self.luz_space_value)
 
         ### knob for haze ###
         self.hze = QLabel("haze", self)
@@ -169,6 +173,7 @@ class MainWindow(QMainWindow):
         self.haze.setMinimum(1)
         self.haze.setMaximum(100)
         self.haze.setValue(0)
+        self.haze.valueChanged.connect(self.haze_value)
 
         ### knob for sombra delay ###
         self.sdly = QLabel("delay", self)
@@ -185,6 +190,7 @@ class MainWindow(QMainWindow):
         self.sombra_delay.setMinimum(1)
         self.sombra_delay.setMaximum(100)
         self.sombra_delay.setValue(50)
+        self.sombra_delay.valueChanged.connect(self.sombra_delay_value)
 
         ### knob for sombra space ###
         self.sspc = QLabel("space", self)
@@ -201,13 +207,41 @@ class MainWindow(QMainWindow):
         self.sombra_space.setMinimum(1)
         self.sombra_space.setMaximum(100)
         self.sombra_space.setValue(50)
+        self.sombra_space.valueChanged.connect(self.sombra_space_value)
 
         self.show()
 
     def wet_dry_value(self):
-        #print(self.wet_dry.value())
+        #print("wet/dry: ", self.wet_dry.value())
         return self.wet_dry.value()
 
+    def melt_value(self):
+        #print("melt: ", self.melt.value())
+        return self.melt.value()
+
+    def fractals_value(self):
+        #print("fractals: ", self.fractals.value())
+        return self.fractals.value()
+
+    def luz_delay_value(self):
+        #print("luz_delay: ", self.luz_delay.value())
+        return self.luz_delay.value()
+
+    def luz_space_value(self):
+        #print("luz_space: ", self.luz_space.value())
+        return self.luz_space.value()
+
+    def haze_value(self):
+        #print("haze: ", self.haze.value())
+        return self.haze.value()
+
+    def sombra_delay_value(self):
+        #print("sombra_delay: ", self.sombra_delay.value())
+        return self.sombra_delay.value()
+
+    def sombra_space_value(self):
+        #print("sombra_space: ", self.sombra_space.value())
+        return self.sombra_space.value()
 
 
 def main():
@@ -248,8 +282,8 @@ def main():
     right_lightverb = (wet_right * .6)
 
     ### mixer ###
-    wet_dry_val = MainWindow.wet_dry_value(MainWindow.__init__.wet_dry())
-    print(wet_dry_val)
+    #wet_dry_val = MainWindow.wet_dry_value(MainWindow.__init__.wet_dry())
+    #print(wet_dry_val)
     wet_dry = 0
     master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry)
     master.out()
@@ -262,9 +296,6 @@ def main():
     window.show()
 
     app.exec()
-
-    # If your final output uses less channels than the number of audio streams in an object, don’t 
-    # forget to mix it down (call its mix() method) before applying effects on the sum of the signals.
 
 
 def mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry):
@@ -287,9 +318,6 @@ def mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, w
     mix.setAmp(4, 0, rlv_val) # right_lightverb - .6 50% wet
 
     return mix
-
-
-
 
 def distortion(wet_path1):
     # Distortion parameters

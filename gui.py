@@ -73,7 +73,7 @@ class MainWindow(QMainWindow):
         self.output.move(47, 132)
 
         ### knob for wet/dry ###
-        x = wet_dry(X)
+        #x = wet_dry(X)
 
 
         ### knob for melt ###
