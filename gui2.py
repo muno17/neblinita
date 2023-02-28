@@ -4,12 +4,6 @@ from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QLabel, QDial, Q
 from PyQt6.QtCore import QSize, Qt
 from PyQt6.QtGui import QPalette, QColor
 
-class input_widget(QWidget):
-    def __init__(self,parent = None):
-        super(input_widget,self).__init__()
-        self.input = QComboBox
-        self.parent = parent
-        self.show()
 
 
 class MainWindow(QMainWindow):
@@ -20,13 +14,13 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("neblina")
         self.setFixedSize(QSize(450,300))
 
-        self.input = QComboBox()
+        self.input = QComboBox(self)
         self.input.move(55, 175)
 
-        #self.wet_dry = QComboBox()
-        #self.wet_dry.setNotchesVisible(True)
-        #self.wet_dry.setWrapping(False)
-        #self.wet_dry.move(55, 175)
+        self.wet_dry = QDial(self)
+        self.wet_dry.setNotchesVisible(True)
+        self.wet_dry.setWrapping(False)
+        self.wet_dry.move(55, 175)
 
         # create melt (disintegrate) knob
         #def melt
@@ -160,8 +154,7 @@ class MainWindow(QMainWindow):
         self.sspc.setFont(sspc_font)
         self.sspc.move(344, 270)
 
-
-        self.show()
+        #self.show()
 
 
 app = QApplication(sys.argv)
