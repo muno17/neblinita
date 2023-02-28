@@ -27,8 +27,8 @@ def main():
     left_distdelay, right_distdelay = distdelay(distortion_out, buftime)
     left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
     left_gv, right_gv = grimeverb(left_dirtdelay, right_dirtdelay)
-    left_grimeverb = (left_gv * .65)
-    right_grimeverb = (right_gv * .65)
+    left_grimeverb = (left_gv * .5)
+    right_grimeverb = (right_gv * .5)
 
 
     ### signal chain for light reverb ###
@@ -40,7 +40,7 @@ def main():
     right_lightverb = (wet_right * .6)
 
     ### mixer ###
-    master = Mixer(chnls=5, mul=.6)
+    master = Mixer(chnls=5, mul=.55)
     master.addInput(0, dry)
     master.addInput(1, left_grimeverb)
     master.addInput(2, right_grimeverb)
@@ -72,6 +72,7 @@ def distortion(wet_path1):
     LP_CUTOFF_FREQ = 3000  # Lowpass filter cutoff frequency.
     BALANCE = 0.9  # Balance dry - wet.
 
+
     # The transfert function is build in two phases.
     # 1. Transfert function for signal lower than 0.
     table = ExpTable([(0, -0.25), (4096, 0), (8192, 0)], exp=30)
@@ -102,6 +103,8 @@ def distortion(wet_path1):
 
 
 def distdelay(distortion_out, buftime):
+    noise = BrownNoise(0.4)
+    
     # Delay parameters
     delay_time_l = Sig(0.08)  # Delay time for the left channel delay.
     delay_feed = Sig(0.3)  # Feedback value for both delays.
@@ -129,7 +132,13 @@ def distdelay(distortion_out, buftime):
     # Change the right delay input (now that the left delay exists).
     right.setInput(original_delayed + left * delay_feed)
 
-    return left, right
+    dleft = Disto(left, drive=0.0, slope=.8)
+    dright = Disto(left, drive=0.0, slope=.8)
+
+    dleft.setDrive(0.0) # controlled by haze
+    dright.setDrive(0.0) # controlled by haze
+
+    return dleft, dright
 
     
 def dirtdelay(left_distdelay, right_distdelay, buftime):
