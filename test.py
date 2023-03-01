@@ -89,6 +89,7 @@ class MainWindow(QMainWindow):
         self.wet_dry.setMaximum(100)
         self.wet_dry.setValue(1)
         self.wet_dry.valueChanged.connect(self.wet_dry_value)
+        print(wet_dry.Value)
 
         ### knob for melt ###
         self.mlt = QLabel("melt", self)
@@ -212,7 +213,7 @@ class MainWindow(QMainWindow):
         self.show()
 
     def wet_dry_value(self):
-        print("wet/dry: ", self.wet_dry.value())
+        #print("wet/dry: ", self.wet_dry.value())
         return self.wet_dry.value()
 
     def melt_value(self):
