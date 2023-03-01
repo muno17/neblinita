@@ -9,7 +9,7 @@ def main():
 
     ### create the gui window ###
     sg.theme('DarkGrey4')
-    layout = [[sg.Text('neblina', font=('Monaco', 30), pad=(5,5))],
+    layout = [[sg.Text('neblina', font=('Monaco', 30), pad=(5,5)), sg.Text('muno audio', font=('Monaco'))],
             [sg.Combo(('input1', 'input2', 'input3'), pad=(100,30)), sg.Combo(('output1', 'output2', 'output3'),pad=(50,0))],
             [sg.Slider((0.00,1.00), key='-WET_DRY-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, pad=(15,0), border_width=2, font='Monaco'),
             sg.Slider((0.00,1.00), key='-MELT-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
@@ -21,7 +21,7 @@ def main():
             sg.Slider((0.00,1.00), key='-SOMBRA_SPACE-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(45,0), font='Monaco')],
             [sg.Text(text='   wet/dry', font='Monaco'), sg.Text(text='   melt', font='Monaco'), sg.Text(text='   fractals', font='Monaco'),
             sg.Text(text=' luz delay', font='Monaco'), sg.Text(text='luz space', font='Monaco'), sg.Text(text='  haze', font='Monaco'),
-                sg.Text(text='sombra delay', font='Monaco'), sg.Text(text='sombra space', font='Monaco')]]
+            sg.Text(text='sombra delay', font='Monaco'), sg.Text(text='sombra space', font='Monaco')]]
 
     ### initiate pyo server ###
     s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
