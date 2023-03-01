@@ -5,8 +5,8 @@ import sys
 
 def main():
     # initiate pyo server
-    s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
-    s.amp = 0.18
+    s = Server(nchnls=1) # nchnls defaults to 2 channel output, changed to 1 for headphones
+    s.amp = 0.2
     # set the input device
     s.setInputDevice(1) # zoom
     # set the output device
@@ -39,7 +39,7 @@ def main():
     left_lightverb = (wet_left * .6)
     right_lightverb = (wet_right * .6)
 
-    wet_dry = 0.6
+    wet_dry = 0.7
 
     ### mixer ###
     master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry)
@@ -142,8 +142,8 @@ def distdelay(distortion_out, buftime):
     dleft = Disto(left, drive=0.0, slope=.8)
     dright = Disto(left, drive=0.0, slope=.8)
 
-    dleft.setDrive(0.0) # controlled by haze
-    dright.setDrive(0.0) # controlled by haze
+    dleft.setDrive(0.5) # controlled by haze
+    dright.setDrive(.5) # controlled by haze
 
     return dleft, dright
 
@@ -168,16 +168,6 @@ def dirtdelay(left_distdelay, right_distdelay, buftime):
 
     # Change the right delay input (now that the left delay exists).
     right.setInput(original_delayed + left * delay_feed)
-
-    def playit():
-        "Assign a sound to the player and start playback."
-        which = random.randint(1, 4)
-        path = wet_path % which
-        #sf.path = path
-        signal.play()
-
-    # Call the function "playit" every second.
-    pat = Pattern(playit, 1).play()
 
     lout = (left * .1)
     rout = (right * .1)
@@ -242,16 +232,6 @@ def delay1(wet_path, buftime):
     # Change the right delay input (now that the left delay exists).
     right.setInput(original_delayed + left * delay_feed)
 
-    def playit():
-        "Assign a sound to the player and start playback."
-        which = random.randint(1, 4)
-        path = wet_path % which
-        #sf.path = path
-        signal.play()
-
-    # Call the function "playit" every second.
-    pat = Pattern(playit, 1).play()
-
     return left, right
 
 
@@ -278,16 +258,6 @@ def delay2(delay1_left, delay1_right, buftime):
 
     # Change the right delay input (now that the left delay exists).
     right.setInput(original_delayed + left * delay_feed)
-
-    def playit():
-        "Assign a sound to the player and start playback."
-        which = random.randint(1, 4)
-        path = wet_path % which
-        #sf.path = path
-        signal.play()
-
-    # Call the function "playit" every second.
-    pat = Pattern(playit, 1).play()
 
     return left, right
 

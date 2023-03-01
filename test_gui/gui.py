@@ -24,7 +24,7 @@ def main():
             sg.Text(text='sombra delay', font='Monaco'), sg.Text(text='sombra space', font='Monaco')]]
 
     ### initiate pyo server ###
-    s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
+    s = Server(nchnls=1) # nchnls defaults to 2 channel output, changed to 1 for headphones
     s.amp = 0.2
     # set the input device
     s.setInputDevice(1) # zoom = 1 with headphones
@@ -58,7 +58,7 @@ def main():
     left_lightverb = (wet_left * .6)
     right_lightverb = (wet_right * .6)
 
-    wet_dry = 0.6
+    wet_dry = 0
     
     ### mixer ###
     master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry)

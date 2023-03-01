@@ -15,12 +15,12 @@ def main():
             [sg.Text(text='   wet/dry', font='Monaco'), sg.Text(text='   haze', font='Monaco'),]]
 
     ### initiate pyo server ###
-    s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
+    s = Server(nchnls=1) # nchnls defaults to 2 channel output, changed to 1 for headphones
     s.amp = 0.2
     # set the input device
-    s.setInputDevice(1) # zoom = 1 with headphones
+    s.setInputDevice(1)
     # set the output device
-    s.setOutputDevice(4) # headphones: when zoom is used 2 - headphones, 4 - speakers
+    s.setOutputDevice(2)
 
     # boot server
     s.boot()
@@ -145,16 +145,6 @@ def dirtdelay(left_distdelay, right_distdelay, buftime):
     original_delayed = Delay(left_distdelay + right_distdelay, delay_time_l, mul=1 - delay_feed)
     right.setInput(original_delayed + left * delay_feed)
 
-    def playit():
-        "Assign a sound to the player and start playback."
-        which = random.randint(1, 4)
-        path = wet_path % which
-        #sf.path = path
-        signal.play()
-
-    # Call the function "playit" every second.
-    pat = Pattern(playit, 1).play()
-
     lout = (left * .1)
     rout = (right * .1)
 
@@ -201,16 +191,6 @@ def delay1(wet_path, buftime):
     original_delayed = Delay(wet_path, delay_time_l, mul=1 - delay_feed)
     right.setInput(original_delayed + left * delay_feed)
 
-    def playit():
-        "Assign a sound to the player and start playback."
-        which = random.randint(1, 4)
-        path = wet_path % which
-        #sf.path = path
-        signal.play()
-
-    # Call the function "playit" every second.
-    pat = Pattern(playit, 1).play()
-
     return left, right
 
 
@@ -222,16 +202,6 @@ def delay2(delay1_left, delay1_right, buftime):
     left = Delay(delay1_left + delay1_right + right * delay_feed, delay=delay_time_l)
     original_delayed = Delay(delay1_left + delay1_right, delay_time_l, mul=1 - delay_feed)
     right.setInput(original_delayed + left * delay_feed)
-
-    def playit():
-        "Assign a sound to the player and start playback."
-        which = random.randint(1, 4)
-        path = wet_path % which
-        #sf.path = path
-        signal.play()
-
-    # Call the function "playit" every second.
-    pat = Pattern(playit, 1).play()
 
     return left, right
 
