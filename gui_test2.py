@@ -72,7 +72,6 @@ class MainWindow(QMainWindow):
         self.output.addItems(["one, two, three"])
         self.output.move(47, 132)
 
-
         ### knob for wet/dry ###
         self.wtdry = QLabel("wet/dry", self)
         wtdry_font = self.wtdry.font()
@@ -87,7 +86,7 @@ class MainWindow(QMainWindow):
         self.wet_dry.move(45, 175)
         self.wet_dry.setMinimum(1)
         self.wet_dry.setMaximum(100)
-        self.wet_dry.setValue(1)
+        self.wet_dry.setValue(70)
         self.wet_dry.valueChanged.connect(self.wet_dry_value)
         #print(wet_dry.Value)
 
@@ -213,7 +212,7 @@ class MainWindow(QMainWindow):
         self.show()
 
     def wet_dry_value(self):
-        print("wet/dry: ", self.wet_dry.value())
+        #print("wet/dry: ", self.wet_dry.value())
         return self.wet_dry.value()
 
     def melt_value(self):
@@ -252,7 +251,7 @@ def main():
 
     # initiate pyo server
     s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
-    s.amp = 0.18
+    s.amp = 0.2
     # set the input device
     s.setInputDevice(1) # zoom
     # set the output device
@@ -269,14 +268,6 @@ def main():
     # create copy of input for light reverb
     wet_path2 = dry
 
-    ### signal chain for sombra reverb ###
-    distortion_out = distortion(wet_path1)
-    left_distdelay, right_distdelay = distdelay(distortion_out, buftime)
-    left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
-    left_gv, right_gv = grimeverb(left_dirtdelay, right_dirtdelay)
-    left_grimeverb = (left_gv * .5)
-    right_grimeverb = (right_gv * .5)
-
     ### signal chain for luz reverb ###
     delay1_left, delay1_right = delay1(wet_path2, buftime)
     delay2_left, delay2_right = delay2(delay1_left, delay1_right, buftime)
@@ -284,6 +275,14 @@ def main():
     wet_left, wet_right = reverb(chorus_left, chorus_right)
     left_lightverb = (wet_left * .6)
     right_lightverb = (wet_right * .6)
+
+    ### signal chain for sombra reverb ###
+    distortion_out = distortion(wet_path1)
+    left_distdelay, right_distdelay = distdelay(distortion_out, buftime)
+    left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
+    left_gv, right_gv = grimeverb(left_dirtdelay, right_dirtdelay)
+    left_grimeverb = (left_gv * .5)
+    right_grimeverb = (right_gv * .5)
 
     ### mixer ###
     master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, window.wet_dry_value())
