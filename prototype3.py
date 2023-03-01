@@ -8,19 +8,14 @@ import sys
 
 
 def main():
-
-    ##################################
     ######### create the gui #########
-    ##################################
 
     app = QApplication(sys.argv)
     window = QMainWindow()
 
-
     window.setStyleSheet("background-color: grey")
     window.setWindowTitle("neblina")
-    window.setFixedSize(QSize(450,300))
-            
+    window.setFixedSize(QSize(450,300))      
 
     ### label - neblina ###
     window.title = QLabel("neblina", window)
@@ -38,13 +33,18 @@ def main():
     window.muno.setFont(muno_font)
     window.muno.move(330, 10)
 
-    ### label - luz ###
-    window.luz = QLabel("luz", window)
-    luz_font = window.luz.font()
-    luz_font.setPointSize(18)
-    luz_font.setFamily('Monaco')
-    window.luz.setFont(luz_font)
-    window.luz.move(214, 65)
+
+
+
+    ########### audio i/o #############
+
+    # initiate pyo server
+    s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
+    s.amp = 0.18
+    # set the input device
+    s.setInputDevice(1) # zoom
+    # set the output device
+    s.setOutputDevice(2) # headphones: when zoom is used 2 - headphones, 4 - speakers
 
 
     ### input dropdown ###
@@ -71,58 +71,36 @@ def main():
     window.output.addItems(["one, two, three"])
     window.output.move(47, 132)
 
+    # boot server
+    s.boot()
+    # get buffer time
+    buftime = s.getBufferSize() / s.getSamplingRate()
 
-    ### knob for wet/dry ###
-    window.wtdry = QLabel("wet/dry", window)
-    wtdry_font = window.wtdry.font()
-    wtdry_font.setPointSize(10)
-    wtdry_font.setFamily('Monaco')
-    window.wtdry.setFont(wtdry_font)
-    window.wtdry.move(75, 202)
+    
+    # dry signal
+    dry = Input()
+    # create copy of input for fog reverb
+    wet_path1 = dry
+    # create copy of input for light reverb
+    wet_path2 = dry
 
-    window.wet_dry = QDial(window)
-    window.wet_dry.setNotchesVisible(True)
-    window.wet_dry.setWrapping(False)
-    window.wet_dry.move(45, 175)
-    window.wet_dry.setMinimum(1)
-    window.wet_dry.setMaximum(100)
-    window.wet_dry.setValue(1)
-    window.wet_dry.valueChanged.connect(wetdry)
-    #print(window.wet_dry.value)
+    ##################################################################
 
-    ### knob for melt ###
-    window.mlt = QLabel("melt", window)
-    mlt_font = window.mlt.font()
-    mlt_font.setPointSize(10)
-    mlt_font.setFamily('Monaco')
-    window.mlt.setFont(mlt_font)
-    window.mlt.move(83, 270)
+    ### label - luz ###
+    window.luz = QLabel("luz", window)
+    luz_font = window.luz.font()
+    luz_font.setPointSize(18)
+    luz_font.setFamily('Monaco')
+    window.luz.setFont(luz_font)
+    window.luz.move(214, 65)
 
-    window.melt = QDial(window)
-    window.melt.setNotchesVisible(True)
-    window.melt.setWrapping(False)
-    window.melt.move(45, 243)
-    window.melt.setMinimum(1)
-    window.melt.setMaximum(100)
-    window.melt.setValue(1)
-    #window.melt.valueChanged.connect(melt_value)
-
-    ### knob for fractals ###
-    window.frctls = QLabel("fractals", window)
-    frctls_font = window.frctls.font()
-    frctls_font.setPointSize(10)
-    frctls_font.setFamily('Monaco')
-    window.frctls.setFont(frctls_font)
-    window.frctls.move(208, 134)
-
-    window.fractals = QDial(window)
-    window.fractals.setNotchesVisible(True)
-    window.fractals.setWrapping(False)
-    window.fractals.move(180, 107)
-    window.fractals.setMinimum(1)
-    window.fractals.setMaximum(100)
-    window.fractals.setValue(50)
-    #window.fractals.valueChanged.connect(fractals_value)
+    ### signal chain for luz reverb ###
+    delay1_left, delay1_right = delay1(wet_path2, buftime)
+    delay2_left, delay2_right = delay2(delay1_left, delay1_right, buftime)
+    chorus_left, chorus_right = chorus(delay2_left, delay2_right)
+    wet_left, wet_right = reverb(chorus_left, chorus_right)
+    left_lightverb = (wet_left * .6)
+    right_lightverb = (wet_right * .6)
 
     ### knob for luz delay ###
     window.ldly = QLabel("delay", window)
@@ -158,22 +136,40 @@ def main():
     window.luz_space.setValue(50)
     #window.luz_space.valueChanged.connect(luz_space_value)
 
-    ### knob for haze ###
-    window.hze = QLabel("haze", window)
-    hze_font = window.hze.font()
-    hze_font.setPointSize(10)
-    hze_font.setFamily('Monaco')
-    window.hze.setFont(hze_font)
-    window.hze.move(348, 134)
+    ### knob for fractals ###
+    window.frctls = QLabel("fractals", window)
+    frctls_font = window.frctls.font()
+    frctls_font.setPointSize(10)
+    frctls_font.setFamily('Monaco')
+    window.frctls.setFont(frctls_font)
+    window.frctls.move(208, 134)
 
-    window.haze = QDial(window)
-    window.haze.setNotchesVisible(True)
-    window.haze.setWrapping(False)
-    window.haze.move(309, 107)
-    window.haze.setMinimum(1)
-    window.haze.setMaximum(100)
-    window.haze.setValue(0)
-    #window.haze.valueChanged.connect(haze_value)
+    window.fractals = QDial(window)
+    window.fractals.setNotchesVisible(True)
+    window.fractals.setWrapping(False)
+    window.fractals.move(180, 107)
+    window.fractals.setMinimum(1)
+    window.fractals.setMaximum(100)
+    window.fractals.setValue(50)
+    #window.fractals.valueChanged.connect(fractals_value)
+
+    ##################################################################
+
+    ### label - sombra ###
+    window.sombra = QLabel("sombra", window)
+    sombra_font = window.sombra.font()
+    sombra_font.setPointSize(18)
+    sombra_font.setFamily('Monaco')
+    window.sombra.setFont(sombra_font)
+    window.sombra.move(325, 65)
+    
+    ### signal chain for sombra reverb ###
+    distortion_out = distortion(wet_path1)
+    left_distdelay, right_distdelay = distdelay(distortion_out, buftime)
+    left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
+    left_gv, right_gv = grimeverb(left_dirtdelay, right_dirtdelay)
+    left_grimeverb = (left_gv * .5)
+    right_grimeverb = (right_gv * .5)
 
     ### knob for sombra delay ###
     window.sdly = QLabel("delay", window)
@@ -209,61 +205,73 @@ def main():
     window.sombra_space.setValue(50)
     #window.sombra_space.valueChanged.connect(sombra_space_value)
 
-    window.show()
+    ### knob for haze ###
+    window.hze = QLabel("haze", window)
+    hze_font = window.hze.font()
+    hze_font.setPointSize(10)
+    hze_font.setFamily('Monaco')
+    window.hze.setFont(hze_font)
+    window.hze.move(348, 134)
 
-    ##################################
-    #### create the audio server #####
-    ##################################
+    window.haze = QDial(window)
+    window.haze.setNotchesVisible(True)
+    window.haze.setWrapping(False)
+    window.haze.move(309, 107)
+    window.haze.setMinimum(1)
+    window.haze.setMaximum(100)
+    window.haze.setValue(0)
+    #window.haze.valueChanged.connect(haze_value)
 
-    # initiate pyo server
-    s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
-    s.amp = 0.18
-    # set the input device
-    s.setInputDevice(1) # zoom
-    # set the output device
-    s.setOutputDevice(2) # headphones: when zoom is used 2 - headphones, 4 - speakers
+    ##################################################################
 
-    # boot server
-    s.boot()
-    # get buffer time
-    buftime = s.getBufferSize() / s.getSamplingRate()
-    # dry signal
-    dry = Input()
-    # create copy of input for fog reverb
-    wet_path1 = dry
-    # create copy of input for light reverb
-    wet_path2 = dry
+    ### knob for melt ###
+    window.mlt = QLabel("melt", window)
+    mlt_font = window.mlt.font()
+    mlt_font.setPointSize(10)
+    mlt_font.setFamily('Monaco')
+    window.mlt.setFont(mlt_font)
+    window.mlt.move(83, 270)
 
-    
-    ### signal chain for sombra reverb ###
-    distortion_out = distortion(wet_path1)
-    left_distdelay, right_distdelay = distdelay(distortion_out, buftime)
-    left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
-    left_gv, right_gv = grimeverb(left_dirtdelay, right_dirtdelay)
-    left_grimeverb = (left_gv * .5)
-    right_grimeverb = (right_gv * .5)
+    window.melt = QDial(window)
+    window.melt.setNotchesVisible(True)
+    window.melt.setWrapping(False)
+    window.melt.move(45, 243)
+    window.melt.setMinimum(1)
+    window.melt.setMaximum(100)
+    window.melt.setValue(1)
+    #window.melt.valueChanged.connect(melt_value)
 
-    ### signal chain for luz reverb ###
-    delay1_left, delay1_right = delay1(wet_path2, buftime)
-    delay2_left, delay2_right = delay2(delay1_left, delay1_right, buftime)
-    chorus_left, chorus_right = chorus(delay2_left, delay2_right)
-    wet_left, wet_right = reverb(chorus_left, chorus_right)
-    left_lightverb = (wet_left * .6)
-    right_lightverb = (wet_right * .6)
+    ### knob for wet/dry ###
+    window.wtdry = QLabel("wet/dry", window)
+    wtdry_font = window.wtdry.font()
+    wtdry_font.setPointSize(10)
+    wtdry_font.setFamily('Monaco')
+    window.wtdry.setFont(wtdry_font)
+    window.wtdry.move(75, 202)
+
+    window.wet_dry = QDial(window)
+    window.wet_dry.setNotchesVisible(True)
+    window.wet_dry.setWrapping(False)
+    window.wet_dry.move(45, 175)
+    window.wet_dry.setMinimum(1)
+    window.wet_dry.setMaximum(100)
+    window.wet_dry.setValue(1)
+    #window.wet_dry.valueChanged.connect(wetdry)
+    #print(window.wet_dry.value)
 
     ### mixer ###
-    #wetdry = 0
+    wetdry = 0
     master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wetdry)
     master.out()
 
 
     # start the pyo server and execute the gui
+    window.show()
     s.start()
     app.exec()
 
-    ##################################
+
     ######### gui functions ##########
-    ##################################
 def wet_dry_value(window):
     #print("wet/dry: ", wet_dry.value())
     window.wet_dry
@@ -298,9 +306,7 @@ def sombra_space_value():
     return sombra_space.value()
 
 
-##################################
 ######## audio functions #########
-##################################
 
 def mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry_val):
     wet_dry = wet_dry_val / 100
