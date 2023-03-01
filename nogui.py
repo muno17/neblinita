@@ -4,10 +4,6 @@ import random
 import sys
 
 def main():
-
-    app = QApplication(sys.argv)
-    window = MainWindow()
-
     # initiate pyo server
     s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
     s.amp = 0.18
@@ -43,21 +39,17 @@ def main():
     left_lightverb = (wet_left * .6)
     right_lightverb = (wet_right * .6)
 
-    wet = 50
+    wet_dry = 0.6
 
     ### mixer ###
-    master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, window_dry)
-    print(window.wet_dry_value())
+    master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry)
     master.out()
 
     # start the pyo server and execute the gui
     s.start()
-    app.exec()
+    s.gui(timer=False, title='neblina')
 
-
-def mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry_val):
-    wet_dry = wet_dry_val / 100.0
-
+def mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry):
     dry_val = 1 - (wet_dry - 0.01)
     lgv_val = wet_dry - 0.01
     rgv_val = wet_dry - 0.01
