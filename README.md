@@ -49,8 +49,8 @@ IN PROGRESS
     - create aggregate GUI widgets to control:
         - haze (distortion) knob DONE
             - add distortion to distdelay DONE
-        - space knobs (reverb and delay time)
-        - melt (reverb decay)
+        - space knobs (reverb and delay time) UNABLE TO COMPLETE
+        - melt (reverb decay) UNABLE TO COMPLETE
         - fractals (harmonic content - chorus / delay frequency)
         - wet/dry knob DONE
             - dry: dry = 1, everything else = 0
