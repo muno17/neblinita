@@ -71,5 +71,5 @@ Testing
 ______________________________
 Acknowledgments
 
-- Pyo, documentation by AJAX SOUND STUDIO (http://ajaxsoundstudio.com/pyodoc/index.html#)
+- Pyo by AJAX SOUND STUDIO, documentation (http://ajaxsoundstudio.com/pyodoc/index.html#)
 - PySimpleGui, documentation (https://www.pysimplegui.org/en/latest/call%20reference/)
