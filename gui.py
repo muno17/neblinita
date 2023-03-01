@@ -11,26 +11,23 @@ def main():
     sg.theme('DarkGrey4')
     layout = [[sg.Text('neblina', font=('Monaco', 30), pad=(5,5))],
             [sg.Combo(('input1', 'input2', 'input3'), pad=(100,30)), sg.Combo(('output1', 'output2', 'output3'),pad=(50,0))],
-            [sg.Slider((0,100), key='-WET_DRY-', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, pad=(15,0), border_width=2, font='Monaco'),
-            sg.Slider((0,100), key='-MELT-', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
-            sg.Slider((0,100), key='-FRACTALS-', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
-            sg.Slider((0,100), key='-LUZ_DELAY-', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
-            sg.Slider((0,100), key='-LUZ_SPACE-', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
-            sg.Slider((0,100), key='-HAZE-', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
-            sg.Slider((0,100), key='-SOMBRA_DELAY-', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
-            sg.Slider((0,100), key='-SOMBRA_SPACE-', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco')],
+            [sg.Slider((0.01,1.00), key='-WET_DRY-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, pad=(15,0), border_width=2, font='Monaco'),
+            sg.Slider((0.01,1.00), key='-MELT-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
+            sg.Slider((0.01,1.00), key='-FRACTALS-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
+            sg.Slider((0.01,1.00), key='-LUZ_DELAY-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
+            sg.Slider((0.01,1.00), key='-LUZ_SPACE-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
+            sg.Slider((0.01,1.00), key='-HAZE-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
+            sg.Slider((0.01,1.00), key='-SOMBRA_DELAY-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(5,0), font='Monaco'),
+            sg.Slider((0.01,1.00), key='-SOMBRA_SPACE-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(45,0), font='Monaco')],
             [sg.Text(text='   wet/dry', font='Monaco'), sg.Text(text='   melt', font='Monaco'), sg.Text(text='   fractals', font='Monaco'),
             sg.Text(text=' luz delay', font='Monaco'), sg.Text(text='luz space', font='Monaco'), sg.Text(text='  haze', font='Monaco'),
                 sg.Text(text='sombra delay', font='Monaco'), sg.Text(text='sombra space', font='Monaco')]]
 
-    window = sg.Window('neblina', layout)
-
-
     ### initiate pyo server ###
     s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
-    s.amp = 0.18
+    s.amp = 0.0
     # set the input device
-    s.setInputDevice(1) # zoom
+    s.setInputDevice(0) # zoom = 1 with headphones
     # set the output device
     s.setOutputDevice(2) # headphones: when zoom is used 2 - headphones, 4 - speakers
 
@@ -67,19 +64,18 @@ def main():
     master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry)
     master.out()
 
-    # start the pyo server
+    # start the pyo server and gui window
     s.start()
+    window = sg.Window('neblina', layout)
 
     ### gui event loop ###
     while True:
         event, values = window.read()
-        #print(event, values)
+        print(event, values)
         if event is None:
             break
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
-        #window['-LEFT-'].update(int(values['-SLIDER-']))
-        #window['-RIGHT-'].update(int(values['-SLIDER-']))
         if event == 'Show':
             sg.popup(f'The slider value = {values["-SLIDER-"]}')
     window.close()
