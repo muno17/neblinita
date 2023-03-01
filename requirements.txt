@@ -1,4 +1,2 @@
 pyo
-PyQt6
-time
-random
+PySimpleGUI
