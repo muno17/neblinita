@@ -15,10 +15,10 @@ def main():
             sg.Slider((0,100), key='-MELT-', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
             sg.Slider((0,100), key='-FRACTALS-', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
             sg.Slider((0,100), key='-LUZ_DELAY-', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
-            sg.Slider((0,100), key='-LUZ_SPACE', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
+            sg.Slider((0,100), key='-LUZ_SPACE-', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
             sg.Slider((0,100), key='-HAZE-', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
             sg.Slider((0,100), key='-SOMBRA_DELAY-', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
-            sg.Slider((0,100), key='-SOMBRA_SPACE', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco')],
+            sg.Slider((0,100), key='-SOMBRA_SPACE-', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco')],
             [sg.Text(text='   wet/dry', font='Monaco'), sg.Text(text='   melt', font='Monaco'), sg.Text(text='   fractals', font='Monaco'),
             sg.Text(text=' luz delay', font='Monaco'), sg.Text(text='luz space', font='Monaco'), sg.Text(text='  haze', font='Monaco'),
                 sg.Text(text='sombra delay', font='Monaco'), sg.Text(text='sombra space', font='Monaco')]]
