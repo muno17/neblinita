@@ -24,7 +24,7 @@ def main():
             sg.Text(text='sombra delay', font='Monaco'), sg.Text(text='sombra space', font='Monaco')]]
 
     ### initiate pyo server ###
-    s = Server(sr=44100, buffersize=256, nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
+    s = Server(sr=44100, buffersize=3072, nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
     s.amp = 0.2
     # set the input device
     s.setInputDevice(1) # zoom = 1 with headphones
@@ -47,13 +47,8 @@ def main():
     window = sg.Window('neblina', layout)
 
     ### signal chain for luz reverb ###
-    delay1_left, delay1_right = delay1(wet_path2, buftime)
-    delay2_left, delay2_right = delay2(delay1_left, delay1_right, buftime)
-    chorus_left, chorus_right = chorus(delay2_left, delay2_right)
-    wet_left, wet_right = reverb(chorus_left, chorus_right)
-    left_lightverb = (wet_left * .6)
-    right_lightverb = (wet_right * .6)
 
+    
     ### start sombra signal path
     distortion_out = distortion(wet_path1)
 
@@ -62,15 +57,23 @@ def main():
         try:
             event, values = window.read()
 
+            delay1_left, delay1_right = delay1(wet_path2, buftime)
+            delay2_left, delay2_right = delay2(delay1_left, delay1_right, buftime)
+            chorus_left, chorus_right = chorus(delay2_left, delay2_right)
+            wet_left, wet_right = reverb(chorus_left, chorus_right)
+            left_lightverb = (wet_left * .6)
+            right_lightverb = (wet_right * .6)
+
+
             # signal path for sombra delay
             # -HAZE- controls distortion added to distdelay
             left_distdelay, right_distdelay = distdelay(distortion_out, buftime, values['-HAZE-'])
             # -SOMBRA_DELAY- controls time of dirtdelay
-            left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime, values['-SOMBRA_DELAY-'])
+            left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
             # -SOMBRA_SPACE- controls feedback of grimeverb
-            left_gv, right_gv = grimeverb(left_dirtdelay, right_dirtdelay, values['-SOMBRA_SPACE-'])
-            left_grimeverb = (left_gv * .5)
-            right_grimeverb = (right_gv * .5)
+            left_gv, right_gv = grimeverb(left_dirtdelay, right_dirtdelay)
+            left_grimeverb = (left_gv * .2) #.5
+            right_grimeverb = (right_gv * .2) #.5
             
             
 
@@ -97,7 +100,6 @@ def main():
         except TypeError:
             break
             
-
 
     window.close()
 
@@ -179,8 +181,8 @@ def distdelay(distortion_out, buftime, haze):
     return dleft, dright
 
     
-def dirtdelay(left_distdelay, right_distdelay, buftime, sombra_delay):
-    delay_time_l = Sig(sombra_delay)  # Delay time for the left channel delay.
+def dirtdelay(left_distdelay, right_distdelay, buftime):
+    delay_time_l = Sig(0.3)  # Delay time for the left channel delay.
     delay_feed = Sig(0.8)  # Feedback value for both delays.
 
     # buffer compensation
@@ -216,7 +218,7 @@ def dirtdelay(left_distdelay, right_distdelay, buftime, sombra_delay):
     return lout, rout
 
 
-def grimeverb(left_dirtdelay, right_dirtdelay, space):
+def grimeverb(left_dirtdelay, right_dirtdelay):
     # The delay times are chosen to be as uncorrelated as possible.
     # Prime numbers are a good choice for delay lengths in samples.
     # left channel
@@ -237,10 +239,10 @@ def grimeverb(left_dirtdelay, right_dirtdelay, space):
 
     # The sum of the original signal and the comb filters
     # feeds two serial allpass filters.
-    left_all1 = Allpass(combsum_left, delay=[0.005, 0.00507], feedback=(space))
-    left_all2 = Allpass(left_all1, delay=[0.0117, 0.0123], feedback=(space))
-    right_all1 = Allpass(combsum_right, delay=[0.005, 0.00507], feedback=(space))
-    right_all2 = Allpass(right_all1, delay=[0.0117, 0.0123], feedback=(space))
+    left_all1 = Allpass(combsum_left, delay=[0.005, 0.00507], feedback=0.075)
+    left_all2 = Allpass(left_all1, delay=[0.0117, 0.0123], feedback=0.61)
+    right_all1 = Allpass(combsum_right, delay=[0.005, 0.00507], feedback=0.75)
+    right_all2 = Allpass(right_all1, delay=[0.0117, 0.0123], feedback=0.61)
 
     # Brightness control.
     left_lowp = Tone(left_all2, freq=3500, mul=0.25)
