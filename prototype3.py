@@ -256,14 +256,13 @@ def main():
     window.wet_dry.setMinimum(1)
     window.wet_dry.setMaximum(100)
     window.wet_dry.setValue(1)
-    #window.wet_dry.valueChanged.connect(wetdry)
+    window.wet_dry.valueChanged.connect(wet_dry_value(main))
     #print(window.wet_dry.value)
 
     ### mixer ###
-    wetdry = 0
+    wetdry = 50
     master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wetdry)
     master.out()
-
 
     # start the pyo server and execute the gui
     window.show()
@@ -272,10 +271,9 @@ def main():
 
 
     ######### gui functions ##########
-def wet_dry_value(window):
-    #print("wet/dry: ", wet_dry.value())
-    window.wet_dry
-    #return window.wet_dry.value()
+def wet_dry_value(main):
+    print("wet/dry: ", main.window.wet_dry.value())
+    return window.wet_dry.value()
 
 def melt_value():
     #print("melt: ", melt.value())
@@ -331,7 +329,7 @@ def mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, w
 
     return mix
 
-
+############# sombra delay #################
 def distortion(wet_path1):
     # Distortion parameters
     BP_CENTER_FREQ = 400  # Bandpass filter center frequency.
@@ -479,6 +477,7 @@ def grimeverb(left_dirtdelay, right_dirtdelay):
     return left_lowp, right_lowp
 
 
+############# luz delay #################
 def delay1(wet_path, buftime):
     # Delay parameters
     delay_time_l = Sig(0.1)  # Delay time for the left channel delay.
