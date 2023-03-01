@@ -9,8 +9,8 @@ def main():
 
     ### create the gui window ###
     sg.theme('DarkGrey4')
-    layout = [[sg.Text('neblina', font=('Monaco', 30), pad=(5,5)), sg.Text('muno audio', font=('Monaco'))],
-            [sg.Combo(('input1', 'input2', 'input3'), pad=(100,30)), sg.Combo(('output1', 'output2', 'output3'),pad=(50,0))],
+    layout = [[sg.Text('neblina', font=('Monaco', 30), pad=(5,5)), sg.Text('                                     muno audio', font=('Monaco', 20))],
+            [sg.Combo(('input1', 'input2', 'input3'), pad=(100,25)), sg.Combo(('output1', 'output2', 'output3'),pad=(50,0))],
             [sg.Slider((0.00,1.00), key='-WET_DRY-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, pad=(15,0), border_width=2, font='Monaco'),
             sg.Slider((0.00,1.00), key='-MELT-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
             sg.Slider((0.00,1.00), key='-FRACTALS-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
@@ -25,9 +25,9 @@ def main():
 
     ### initiate pyo server ###
     s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
-    s.amp = 0.0
+    s.amp = 0.2
     # set the input device
-    s.setInputDevice(0) # zoom = 1 with headphones
+    s.setInputDevice(1) # zoom = 1 with headphones
     # set the output device
     s.setOutputDevice(2) # headphones: when zoom is used 2 - headphones, 4 - speakers
 
