@@ -4,29 +4,28 @@ import random
 import sys
 import PySimpleGUI as sg
 
-### creat a gui ***
-
-sg.ChangeLookAndFeel('DarkGrey4')
-layout = [[sg.Text('neblina', font=('Monaco', 30))],
-          [sg.Combo(('input1', 'input2', 'input3')), sg.Combo(('output1', 'output2', 'output3'))],
-          [sg.Slider((0,100), key='wet/dry', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, font='Monaco'),
-           sg.Slider((0,100), key='melt', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, font='Monaco'),
-           sg.Slider((0,100), key='fracatals', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, font='Monaco'),
-           sg.Slider((0,100), key='luz delay', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, font='Monaco'),
-           sg.Slider((0,100), key='luz space', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, font='Monaco'),
-           sg.Slider((0,100), key='haze', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, font='Monaco'),
-           sg.Slider((0,100), key='sombra delay', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, font='Monaco'),
-           sg.Slider((0,100), key='sombra space', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, font='Monaco')],
-          [sg.Text(text='wet/dry', font='Monaco'), sg.Text(text='melt', font='Monaco'), sg.Text(text='fractals', font='Monaco'),
-           sg.Text(text='luz delay', font='Monaco'), sg.Text(text='luz space', font='Monaco'), sg.Text(text='haze', font='Monaco'),
-            sg.Text(text='sombra delay', font='Monaco'), sg.Text(text='sombra space', font='Monaco')]]
-
-window = sg.Window('neblina', layout)
-
-
 
 def main():
-    # initiate pyo server
+    ### create the gui window ###
+    sg.ChangeLookAndFeel('DarkGrey4')
+    layout = [[sg.Text('neblina', font=('Monaco', 30))],
+            [sg.Combo(('input1', 'input2', 'input3')), sg.Combo(('output1', 'output2', 'output3'))],
+            [sg.Slider((0,100), key='wet/dry', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, font='Monaco'),
+            sg.Slider((0,100), key='melt', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, font='Monaco'),
+            sg.Slider((0,100), key='fracatals', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, font='Monaco'),
+            sg.Slider((0,100), key='luz delay', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, font='Monaco'),
+            sg.Slider((0,100), key='luz space', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, font='Monaco'),
+            sg.Slider((0,100), key='haze', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, font='Monaco'),
+            sg.Slider((0,100), key='sombra delay', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, font='Monaco'),
+            sg.Slider((0,100), key='sombra space', orientation='v', tick_interval=50, enable_events=True, disable_number_display=True, font='Monaco')],
+            [sg.Text(text='wet/dry', font='Monaco'), sg.Text(text='melt', font='Monaco'), sg.Text(text='fractals', font='Monaco'),
+            sg.Text(text='luz delay', font='Monaco'), sg.Text(text='luz space', font='Monaco'), sg.Text(text='haze', font='Monaco'),
+                sg.Text(text='sombra delay', font='Monaco'), sg.Text(text='sombra space', font='Monaco')]]
+
+    window = sg.Window('neblina', layout)
+
+
+    ### initiate pyo server ###
     s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
     s.amp = 0.18
     # set the input device
@@ -67,9 +66,11 @@ def main():
     master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry)
     master.out()
 
-    # start the pyo server and execute the gui
+    # start the pyo server
     s.start()
-    while True: # Event Loop
+
+    ### gui event loop ###
+    while True:
         event, values = window.read()
         #print(event, values)
         if event is None:
