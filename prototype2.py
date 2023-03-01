@@ -6,249 +6,221 @@ import time
 import random
 import sys
 
-# main window for gui
-class MainWindow(QMainWindow):
-    def __init__(self, *args, **kwargs):
-        super(MainWindow, self).__init__(*args, **kwargs)
-
-        self.setStyleSheet("background-color: grey")
-        self.setWindowTitle("neblina")
-        self.setFixedSize(QSize(450,300))
-                
-
-        ### label - neblina ###
-        self.title = QLabel("neblina", self)
-        title_font = self.title.font()
-        title_font.setPointSize(24)
-        title_font.setFamily('Monaco')
-        self.title.setFont(title_font)
-        self.title.move(15, 10)
-
-        ### label - muno ###
-        self.muno = QLabel("muno audio", self)
-        muno_font = self.muno.font()
-        muno_font.setPointSize(16)
-        muno_font.setFamily('Monaco')
-        self.muno.setFont(muno_font)
-        self.muno.move(330, 10)
-
-        ### label - luz ###
-        self.luz = QLabel("luz", self)
-        luz_font = self.luz.font()
-        luz_font.setPointSize(18)
-        luz_font.setFamily('Monaco')
-        self.luz.setFont(luz_font)
-        self.luz.move(214, 65)
-
-        ### label - sombra ###
-        self.sombra = QLabel("sombra", self)
-        sombra_font = self.sombra.font()
-        sombra_font.setPointSize(18)
-        sombra_font.setFamily('Monaco')
-        self.sombra.setFont(sombra_font)
-        self.sombra.move(325, 65)
-
-        ### input dropdown ###
-        self.inpt = QLabel("input", self)
-        inpt_font = self.inpt.font()
-        inpt_font.setPointSize(10)
-        inpt_font.setFamily('Monaco')
-        self.inpt.setFont(inpt_font)
-        self.inpt.move(80, 45)
-
-        self.input = QComboBox(self)
-        self.input.addItems(["one, two, three"])
-        self.input.move(47, 75)
-
-        ### output dropdown ###
-        self.outpt = QLabel("output", self)
-        outpt_font = self.outpt.font()
-        outpt_font.setPointSize(10)
-        outpt_font.setFamily('Monaco')
-        self.outpt.setFont(outpt_font)
-        self.outpt.move(79, 107)
-
-        self.output = QComboBox(self)
-        self.output.addItems(["one, two, three"])
-        self.output.move(47, 132)
-
-
-        ### knob for wet/dry ###
-        self.wtdry = QLabel("wet/dry", self)
-        wtdry_font = self.wtdry.font()
-        wtdry_font.setPointSize(10)
-        wtdry_font.setFamily('Monaco')
-        self.wtdry.setFont(wtdry_font)
-        self.wtdry.move(75, 202)
-
-        self.wet_dry = QDial(self)
-        self.wet_dry.setNotchesVisible(True)
-        self.wet_dry.setWrapping(False)
-        self.wet_dry.move(45, 175)
-        self.wet_dry.setMinimum(1)
-        self.wet_dry.setMaximum(100)
-        self.wet_dry.setValue(1)
-        self.wet_dry.valueChanged.connect(self.wet_dry_value)
-        print(wet_dry.Value)
-
-        ### knob for melt ###
-        self.mlt = QLabel("melt", self)
-        mlt_font = self.mlt.font()
-        mlt_font.setPointSize(10)
-        mlt_font.setFamily('Monaco')
-        self.mlt.setFont(mlt_font)
-        self.mlt.move(83, 270)
-
-        self.melt = QDial(self)
-        self.melt.setNotchesVisible(True)
-        self.melt.setWrapping(False)
-        self.melt.move(45, 243)
-        self.melt.setMinimum(1)
-        self.melt.setMaximum(100)
-        self.melt.setValue(1)
-        self.melt.valueChanged.connect(self.melt_value)
-
-        ### knob for fractals ###
-        self.frctls = QLabel("fractals", self)
-        frctls_font = self.frctls.font()
-        frctls_font.setPointSize(10)
-        frctls_font.setFamily('Monaco')
-        self.frctls.setFont(frctls_font)
-        self.frctls.move(208, 134)
-
-        self.fractals = QDial(self)
-        self.fractals.setNotchesVisible(True)
-        self.fractals.setWrapping(False)
-        self.fractals.move(180, 107)
-        self.fractals.setMinimum(1)
-        self.fractals.setMaximum(100)
-        self.fractals.setValue(50)
-        self.fractals.valueChanged.connect(self.fractals_value)
-
-        ### knob for luz delay ###
-        self.ldly = QLabel("delay", self)
-        ldly_font = self.ldly.font()
-        ldly_font.setPointSize(10)
-        ldly_font.setFamily('Monaco')
-        self.ldly.setFont(ldly_font)
-        self.ldly.move(215, 202)
-
-        self.luz_delay = QDial(self)
-        self.luz_delay.setNotchesVisible(True)
-        self.luz_delay.setWrapping(False)
-        self.luz_delay.move(180, 175)
-        self.luz_delay.setMinimum(1)
-        self.luz_delay.setMaximum(100)
-        self.luz_delay.setValue(50)
-        self.luz_delay.valueChanged.connect(self.luz_delay_value)
-
-        ### knob for luz space ###
-        self.lspc = QLabel("space", self)
-        lspc_font = self.lspc.font()
-        lspc_font.setPointSize(10)
-        lspc_font.setFamily('Monaco')
-        self.lspc.setFont(lspc_font)
-        self.lspc.move(215, 270)
-
-        self.luz_space = QDial(self)
-        self.luz_space.setNotchesVisible(True)
-        self.luz_space.setWrapping(False)
-        self.luz_space.move(180, 243)
-        self.luz_space.setMinimum(1)
-        self.luz_space.setMaximum(100)
-        self.luz_space.setValue(50)
-        self.luz_space.valueChanged.connect(self.luz_space_value)
-
-        ### knob for haze ###
-        self.hze = QLabel("haze", self)
-        hze_font = self.hze.font()
-        hze_font.setPointSize(10)
-        hze_font.setFamily('Monaco')
-        self.hze.setFont(hze_font)
-        self.hze.move(348, 134)
-
-        self.haze = QDial(self)
-        self.haze.setNotchesVisible(True)
-        self.haze.setWrapping(False)
-        self.haze.move(309, 107)
-        self.haze.setMinimum(1)
-        self.haze.setMaximum(100)
-        self.haze.setValue(0)
-        self.haze.valueChanged.connect(self.haze_value)
-
-        ### knob for sombra delay ###
-        self.sdly = QLabel("delay", self)
-        sdly_font = self.sdly.font()
-        sdly_font.setPointSize(10)
-        sdly_font.setFamily('Monaco')
-        self.sdly.setFont(sdly_font)
-        self.sdly.move(345, 202)
-
-        self.sombra_delay = QDial(self)
-        self.sombra_delay.setNotchesVisible(True)
-        self.sombra_delay.setWrapping(False)
-        self.sombra_delay.move(309, 175)
-        self.sombra_delay.setMinimum(1)
-        self.sombra_delay.setMaximum(100)
-        self.sombra_delay.setValue(50)
-        self.sombra_delay.valueChanged.connect(self.sombra_delay_value)
-
-        ### knob for sombra space ###
-        self.sspc = QLabel("space", self)
-        sspc_font = self.sspc.font()
-        sspc_font.setPointSize(10)
-        sspc_font.setFamily('Monaco')
-        self.sspc.setFont(sspc_font)
-        self.sspc.move(344, 270)
-
-        self.sombra_space = QDial(self)
-        self.sombra_space.setNotchesVisible(True)
-        self.sombra_space.setWrapping(False)
-        self.sombra_space.move(309, 243)
-        self.sombra_space.setMinimum(1)
-        self.sombra_space.setMaximum(100)
-        self.sombra_space.setValue(50)
-        self.sombra_space.valueChanged.connect(self.sombra_space_value)
-
-        self.show()
-
-    def wet_dry_value(self):
-        #print("wet/dry: ", self.wet_dry.value())
-        return self.wet_dry.value()
-
-    def melt_value(self):
-        #print("melt: ", self.melt.value())
-        return self.melt.value()
-
-    def fractals_value(self):
-        #print("fractals: ", self.fractals.value())
-        return self.fractals.value()
-
-    def luz_delay_value(self):
-        #print("luz_delay: ", self.luz_delay.value())
-        return self.luz_delay.value()
-
-    def luz_space_value(self):
-        #print("luz_space: ", self.luz_space.value())
-        return self.luz_space.value()
-
-    def haze_value(self):
-        #print("haze: ", self.haze.value())
-        return self.haze.value()
-
-    def sombra_delay_value(self):
-        #print("sombra_delay: ", self.sombra_delay.value())
-        return self.sombra_delay.value()
-
-    def sombra_space_value(self):
-        #print("sombra_space: ", self.sombra_space.value())
-        return self.sombra_space.value()
-
 
 def main():
 
+    ##################################
+    ######### create the gui #########
+    ##################################
+
     app = QApplication(sys.argv)
-    window = MainWindow()
+    window = QMainWindow()
+
+
+    window.setStyleSheet("background-color: grey")
+    window.setWindowTitle("neblina")
+    window.setFixedSize(QSize(450,300))
+            
+
+    ### label - neblina ###
+    window.title = QLabel("neblina", window)
+    title_font = window.title.font()
+    title_font.setPointSize(24)
+    title_font.setFamily('Monaco')
+    window.title.setFont(title_font)
+    window.title.move(15, 10)
+
+    ### label - muno ###
+    window.muno = QLabel("muno audio", window)
+    muno_font = window.muno.font()
+    muno_font.setPointSize(16)
+    muno_font.setFamily('Monaco')
+    window.muno.setFont(muno_font)
+    window.muno.move(330, 10)
+
+    ### label - luz ###
+    window.luz = QLabel("luz", window)
+    luz_font = window.luz.font()
+    luz_font.setPointSize(18)
+    luz_font.setFamily('Monaco')
+    window.luz.setFont(luz_font)
+    window.luz.move(214, 65)
+
+    ### label - sombra ###
+    window.sombra = QLabel("sombra", window)
+    sombra_font = window.sombra.font()
+    sombra_font.setPointSize(18)
+    sombra_font.setFamily('Monaco')
+    window.sombra.setFont(sombra_font)
+    window.sombra.move(325, 65)
+
+    ### input dropdown ###
+    window.inpt = QLabel("input", window)
+    inpt_font = window.inpt.font()
+    inpt_font.setPointSize(10)
+    inpt_font.setFamily('Monaco')
+    window.inpt.setFont(inpt_font)
+    window.inpt.move(80, 45)
+
+    window.input = QComboBox(window)
+    window.input.addItems(["one, two, three"])
+    window.input.move(47, 75)
+
+    ### output dropdown ###
+    window.outpt = QLabel("output", window)
+    outpt_font = window.outpt.font()
+    outpt_font.setPointSize(10)
+    outpt_font.setFamily('Monaco')
+    window.outpt.setFont(outpt_font)
+    window.outpt.move(79, 107)
+
+    window.output = QComboBox(window)
+    window.output.addItems(["one, two, three"])
+    window.output.move(47, 132)
+
+
+    ### knob for wet/dry ###
+    window.wtdry = QLabel("wet/dry", window)
+    wtdry_font = window.wtdry.font()
+    wtdry_font.setPointSize(10)
+    wtdry_font.setFamily('Monaco')
+    window.wtdry.setFont(wtdry_font)
+    window.wtdry.move(75, 202)
+
+    window.wet_dry = QDial(window)
+    window.wet_dry.setNotchesVisible(True)
+    window.wet_dry.setWrapping(False)
+    window.wet_dry.move(45, 175)
+    window.wet_dry.setMinimum(1)
+    window.wet_dry.setMaximum(100)
+    window.wet_dry.setValue(1)
+    #window.wet_dry.valueChanged.connect(wet_dry_value)
+    #print(wet_dry.Value)
+
+    ### knob for melt ###
+    window.mlt = QLabel("melt", window)
+    mlt_font = window.mlt.font()
+    mlt_font.setPointSize(10)
+    mlt_font.setFamily('Monaco')
+    window.mlt.setFont(mlt_font)
+    window.mlt.move(83, 270)
+
+    window.melt = QDial(window)
+    window.melt.setNotchesVisible(True)
+    window.melt.setWrapping(False)
+    window.melt.move(45, 243)
+    window.melt.setMinimum(1)
+    window.melt.setMaximum(100)
+    window.melt.setValue(1)
+    #window.melt.valueChanged.connect(melt_value)
+
+    ### knob for fractals ###
+    window.frctls = QLabel("fractals", window)
+    frctls_font = window.frctls.font()
+    frctls_font.setPointSize(10)
+    frctls_font.setFamily('Monaco')
+    window.frctls.setFont(frctls_font)
+    window.frctls.move(208, 134)
+
+    window.fractals = QDial(window)
+    window.fractals.setNotchesVisible(True)
+    window.fractals.setWrapping(False)
+    window.fractals.move(180, 107)
+    window.fractals.setMinimum(1)
+    window.fractals.setMaximum(100)
+    window.fractals.setValue(50)
+    #window.fractals.valueChanged.connect(fractals_value)
+
+    ### knob for luz delay ###
+    window.ldly = QLabel("delay", window)
+    ldly_font = window.ldly.font()
+    ldly_font.setPointSize(10)
+    ldly_font.setFamily('Monaco')
+    window.ldly.setFont(ldly_font)
+    window.ldly.move(215, 202)
+
+    window.luz_delay = QDial(window)
+    window.luz_delay.setNotchesVisible(True)
+    window.luz_delay.setWrapping(False)
+    window.luz_delay.move(180, 175)
+    window.luz_delay.setMinimum(1)
+    window.luz_delay.setMaximum(100)
+    window.luz_delay.setValue(50)
+    #window.luz_delay.valueChanged.connect(luz_delay_value)
+
+    ### knob for luz space ###
+    window.lspc = QLabel("space", window)
+    lspc_font = window.lspc.font()
+    lspc_font.setPointSize(10)
+    lspc_font.setFamily('Monaco')
+    window.lspc.setFont(lspc_font)
+    window.lspc.move(215, 270)
+
+    window.luz_space = QDial(window)
+    window.luz_space.setNotchesVisible(True)
+    window.luz_space.setWrapping(False)
+    window.luz_space.move(180, 243)
+    window.luz_space.setMinimum(1)
+    window.luz_space.setMaximum(100)
+    window.luz_space.setValue(50)
+    #window.luz_space.valueChanged.connect(luz_space_value)
+
+    ### knob for haze ###
+    window.hze = QLabel("haze", window)
+    hze_font = window.hze.font()
+    hze_font.setPointSize(10)
+    hze_font.setFamily('Monaco')
+    window.hze.setFont(hze_font)
+    window.hze.move(348, 134)
+
+    window.haze = QDial(window)
+    window.haze.setNotchesVisible(True)
+    window.haze.setWrapping(False)
+    window.haze.move(309, 107)
+    window.haze.setMinimum(1)
+    window.haze.setMaximum(100)
+    window.haze.setValue(0)
+    #window.haze.valueChanged.connect(haze_value)
+
+    ### knob for sombra delay ###
+    window.sdly = QLabel("delay", window)
+    sdly_font = window.sdly.font()
+    sdly_font.setPointSize(10)
+    sdly_font.setFamily('Monaco')
+    window.sdly.setFont(sdly_font)
+    window.sdly.move(345, 202)
+
+    window.sombra_delay = QDial(window)
+    window.sombra_delay.setNotchesVisible(True)
+    window.sombra_delay.setWrapping(False)
+    window.sombra_delay.move(309, 175)
+    window.sombra_delay.setMinimum(1)
+    window.sombra_delay.setMaximum(100)
+    window.sombra_delay.setValue(50)
+    #window.sombra_delay.valueChanged.connect(sombra_delay_value)
+
+    ### knob for sombra space ###
+    window.sspc = QLabel("space", window)
+    sspc_font = window.sspc.font()
+    sspc_font.setPointSize(10)
+    sspc_font.setFamily('Monaco')
+    window.sspc.setFont(sspc_font)
+    window.sspc.move(344, 270)
+
+    window.sombra_space = QDial(window)
+    window.sombra_space.setNotchesVisible(True)
+    window.sombra_space.setWrapping(False)
+    window.sombra_space.move(309, 243)
+    window.sombra_space.setMinimum(1)
+    window.sombra_space.setMaximum(100)
+    window.sombra_space.setValue(50)
+    #window.sombra_space.valueChanged.connect(sombra_space_value)
+
+    window.show()
+
+    ##################################
+    #### create the audio server #####
+    ##################################
 
     # initiate pyo server
     s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
@@ -286,13 +258,54 @@ def main():
     right_lightverb = (wet_right * .6)
 
     ### mixer ###
-    master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, window.wet_dry_value())
+    wetdry = 0
+    master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wetdry)
     master.out()
+
 
     # start the pyo server and execute the gui
     s.start()
     app.exec()
 
+##################################
+######### gui functions ##########
+##################################
+def wet_dry_value():
+    #print("wet/dry: ", wet_dry.value())
+    return wet_dry.value()
+
+def melt_value():
+    #print("melt: ", melt.value())
+    return melt.value()
+
+def fractals_value():
+    #print("fractals: ", fractals.value())
+    return fractals.value()
+
+def luz_delay_value():
+    #print("luz_delay: ", luz_delay.value())
+    return luz_delay.value()
+
+def luz_space_value():
+    #print("luz_space: ", luz_space.value())
+    return luz_space.value()
+
+def haze_value():
+    #print("haze: ", haze.value())
+    return haze.value()
+
+def sombra_delay_value():
+    #print("sombra_delay: ", sombra_delay.value())
+    return sombra_delay.value()
+
+def sombra_space_value():
+    #print("sombra_space: ", sombra_space.value())
+    return sombra_space.value()
+
+
+##################################
+######## audio functions #########
+##################################
 
 def mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry_val):
     wet_dry = wet_dry_val / 100
