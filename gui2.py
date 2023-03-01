@@ -11,20 +11,22 @@ def main():
     sg.theme('DarkGrey4')
     layout = [[sg.Text('neblina', font=('Monaco', 30), pad=(5,5)), sg.Text('                                     muno audio', font=('Monaco', 20))],
             [sg.Combo(('input1', 'input2', 'input3'), pad=(100,25)), sg.Combo(('output1', 'output2', 'output3'),pad=(50,0))],
-            [sg.Slider((0.00,1.00), key='-WET_DRY-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, pad=(15,0), border_width=2, font='Monaco'),
-            sg.Slider((0.00,1.00), key='-MELT-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
-            sg.Slider((0.00,1.00), key='-FRACTALS-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
-            sg.Slider((0.00,1.00), key='-LUZ_DELAY-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
-            sg.Slider((0.00,1.00), key='-LUZ_SPACE-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
-            sg.Slider((0.00,1.00), key='-HAZE-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
-            sg.Slider((0.00,1.00), key='-SOMBRA_DELAY-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(5,0), font='Monaco'),
-            sg.Slider((0.00,1.00), key='-SOMBRA_SPACE-', orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(45,0), font='Monaco')],
+            [sg.Slider((0.00,1.00), key='-WET_DRY-', default_value=0, orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, pad=(15,0), border_width=2, font='Monaco'),
+            sg.Slider((0.00,1.00), key='-MELT-', default_value=0, orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
+            sg.Slider((0.00,1.00), key='-FRACTALS-', default_value=0, orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
+            sg.Slider((0.00,1.00), key='-LUZ_DELAY-', default_value=0, orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
+            sg.Slider((0.00,1.00), key='-LUZ_SPACE-', default_value=0, orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
+            sg.Slider((0.00,1.00), key='-HAZE-', default_value=0, orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco'),
+            sg.Slider((0.00,1.00), key='-SOMBRA_DELAY-', default_value=0, orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(5,0), font='Monaco'),
+            sg.Slider((0.00,1.00), key='-SOMBRA_SPACE-', default_value=0, orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(45,0), font='Monaco')],
             [sg.Text(text='   wet/dry', font='Monaco'), sg.Text(text='   melt', font='Monaco'), sg.Text(text='   fractals', font='Monaco'),
             sg.Text(text=' luz delay', font='Monaco'), sg.Text(text='luz space', font='Monaco'), sg.Text(text='  haze', font='Monaco'),
             sg.Text(text='sombra delay', font='Monaco'), sg.Text(text='sombra space', font='Monaco')]]
 
+
+
     ### initiate pyo server ###
-    s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
+    s = Server(sr=44100, buffersize=256, nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
     s.amp = 0.2
     # set the input device
     s.setInputDevice(1) # zoom = 1 with headphones
@@ -42,6 +44,10 @@ def main():
     # create copy of input for light reverb
     wet_path2 = dry
 
+    # start the pyo server and gui window
+    s.start()
+    window = sg.Window('neblina', layout)
+
     ### signal chain for sombra reverb ###
     distortion_out = distortion(wet_path1)
     left_distdelay, right_distdelay = distdelay(distortion_out, buftime)
@@ -58,48 +64,44 @@ def main():
     left_lightverb = (wet_left * .6)
     right_lightverb = (wet_right * .6)
 
-    wet_dry = 0.6
-    
-    ### mixer ###
-    master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry)
-    master.out()
-
-    # start the pyo server and gui window
-    s.start()
-    window = sg.Window('neblina', layout)
-
-    ### gui event loop ###
+       ### gui event loop ###
     while True:
-        event, values = window.read()
-        
-        if event is None:
+        try:
+            event, values = window.read()
+
+            
+
+
+            mix = Mixer(chnls=5, mul=.55)
+            mix.addInput(0, dry)
+            mix.addInput(1, left_grimeverb)
+            mix.addInput(2, right_grimeverb)
+            mix.addInput(3, left_lightverb)
+            mix.addInput(4, right_lightverb)
+            mix.setAmp(0, 0, (1 - values['-WET_DRY-']))  # dry  - .25 50% wet
+            mix.setAmp(1, 0, values['-WET_DRY-']) # left_grimeverb - .5 50% wet
+            mix.setAmp(2, 0, values['-WET_DRY-']) # right_grimeverb - .5 50% wet
+            mix.setAmp(3, 0, values['-WET_DRY-']) # left_lightverb - .6 50% wet
+            mix.setAmp(4, 0, values['-WET_DRY-']) # right_lightverb - .6 50% wet
+            mix.out()
+
+            if event is None:
+                break
+            if event in (sg.WIN_CLOSED, 'Exit'):
+                break
+            if event == 'Show':
+                sg.popup(f'The slider value = {values["-SLIDER-"]}')
+        except TypeError:
             break
-        if event in (sg.WIN_CLOSED, 'Exit'):
-            break
-        if event == 'Show':
-            sg.popup(f'The slider value = {values["-SLIDER-"]}')
+            
+
+
     window.close()
 
-def mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry):
-    dry_val = 1 - wet_dry
-    lgv_val = wet_dry
-    rgv_val = wet_dry
-    llv_val = wet_dry
-    rlv_val = wet_dry
+#def mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry):
+    
 
-    mix = Mixer(chnls=5, mul=.55)
-    mix.addInput(0, dry)
-    mix.addInput(1, left_grimeverb)
-    mix.addInput(2, right_grimeverb)
-    mix.addInput(3, left_lightverb)
-    mix.addInput(4, right_lightverb)
-    mix.setAmp(0, 0, dry_val) # dry  - .25 50% wet
-    mix.setAmp(1, 0, lgv_val) # left_grimeverb - .5 50% wet
-    mix.setAmp(2, 0, rgv_val) # right_grimeverb - .5 50% wet
-    mix.setAmp(3, 0, llv_val) # left_lightverb - .6 50% wet
-    mix.setAmp(4, 0, rlv_val) # right_lightverb - .6 50% wet
-
-    return mix
+    #return mix
 
 
 def distortion(wet_path1):
