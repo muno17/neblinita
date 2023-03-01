@@ -48,14 +48,6 @@ def main():
     s.start()
     window = sg.Window('neblina', layout)
 
-    ### signal chain for sombra reverb ###
-    distortion_out = distortion(wet_path1)
-    left_distdelay, right_distdelay = distdelay(distortion_out, buftime)
-    left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
-    left_gv, right_gv = grimeverb(left_dirtdelay, right_dirtdelay)
-    left_grimeverb = (left_gv * .5)
-    right_grimeverb = (right_gv * .5)
-
     ### signal chain for luz reverb ###
     delay1_left, delay1_right = delay1(wet_path2, buftime)
     delay2_left, delay2_right = delay2(delay1_left, delay1_right, buftime)
@@ -64,14 +56,26 @@ def main():
     left_lightverb = (wet_left * .6)
     right_lightverb = (wet_right * .6)
 
+    ### start sombra signal path
+    distortion_out = distortion(wet_path1)
+
+
        ### gui event loop ###
     while True:
         try:
             event, values = window.read()
 
+            # signal path for sombra delay
+            # -HAZE- controls distortion added to distdelay
+            left_distdelay, right_distdelay = distdelay(distortion_out, buftime, values['-HAZE-'])
+            left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
+            left_gv, right_gv = grimeverb(left_dirtdelay, right_dirtdelay)
+            left_grimeverb = (left_gv * .5)
+            right_grimeverb = (right_gv * .5)
+            
             
 
-
+            # -WET_DRY- controls wet/dry
             mix = Mixer(chnls=5, mul=.55)
             mix.addInput(0, dry)
             mix.addInput(1, left_grimeverb)
@@ -142,7 +146,7 @@ def distortion(wet_path1):
     return mixed
 
 
-def distdelay(distortion_out, buftime):
+def distdelay(distortion_out, buftime, haze):
     noise = BrownNoise(0.4)
     
     # Delay parameters
@@ -175,8 +179,8 @@ def distdelay(distortion_out, buftime):
     dleft = Disto(left, drive=0.0, slope=.8)
     dright = Disto(left, drive=0.0, slope=.8)
 
-    dleft.setDrive(0.0) # controlled by haze
-    dright.setDrive(0.0) # controlled by haze
+    dleft.setDrive(haze) # controlled by haze
+    dright.setDrive(haze) # controlled by haze
 
     return dleft, dright
 

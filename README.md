@@ -33,33 +33,28 @@ Challenges
 - customizing the effects and managing gain - DONE
 - chaining all the effect together - DONE
 - implementing a wet/dry feature - DONE
-- creating a GUI
+- creating a GUI DONE
     - dropdowns for interactive I/O
-    - knobs for aggregate functions
+    - knobs for aggregate functions DONE
 
 ____________________________
 
 IN PROGRESS
 
-- create a GUI for control and aggregate function knobs
-    - knobs - QDial DONE
-    - display signal level - QProgressBar
-        - displays decibel level, similar to ableton
+- create a GUI for control and aggregate function knobs 
     - audio I/O - QComboBox for dropdown menu
         - run pa_list_devices() to get a list for inputs and outputs
         - for inputs: regex (r"^(\d*):\s IN, name: (+*),.*$") - gets inputs
         - for outputs: regex (r"^(\d*):\s IN, name: (+*),.*$") - gets outputs
-
-
-- create aggregate GUI widgets to control:
-    - fog (distortion) knob
-        - add distortion to distdelay
-    - space knob (reverb and delay time)
-    - melt (reverb decay)
-    - fractals (harmonic content - chorus / delay frequency)
-    - wet/dry knob DONE
-        - dry: dry = 1, everything else = 0
-        - wet: dry = 0, grimeverbs = .8, lightverbs = 1
+    - create aggregate GUI widgets to control:
+        - haze (distortion) knob DONE
+            - add distortion to distdelay DONE
+        - space knob (reverb and delay time)
+        - melt (reverb decay)
+        - fractals (harmonic content - chorus / delay frequency)
+        - wet/dry knob DONE
+            - dry: dry = 1, everything else = 0
+            - wet: dry = 0, grimeverbs = .8, lightverbs = 1
 
 
 
