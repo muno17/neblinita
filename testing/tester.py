@@ -22,8 +22,8 @@ def main():
     # set the output device
     s.setOutputDevice(2)
 
-    # boot server and start
-    s.boot().start()
+    # boot server
+    s.boot()
     # get buffer time
     buftime = s.getBufferSize() / s.getSamplingRate()
     # dry signal
@@ -33,7 +33,8 @@ def main():
     # create copy of input for light reverb
     wet_path2 = dry
 
-    # start gui window
+    # start the pyo server and gui window
+    s.start()
     window = sg.Window('neblina', layout)
 
     ### signal chain for luz reverb ###
@@ -43,22 +44,24 @@ def main():
     wet_left, wet_right = reverb(chorus_left, chorus_right)
     left_lightverb = (wet_left * .6)
     right_lightverb = (wet_right * .6)
-    
-    ### start sombra signal path
+
+
+    # signal path for sombra delay
+    # -HAZE- controls distortion added to distdelay
     distortion_out = distortion(wet_path1)
+    left_distdelay, right_distdelay = distdelay(distortion_out, buftime)
+    left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
+    left_gv, right_gv = grimeverb(left_dirtdelay, right_dirtdelay)
+    left_grimeverb = (left_gv * .5)
+    right_grimeverb = (right_gv * .5)
+
 
     ### gui event loop ###
     while True:
         try:
             event, values = window.read()
 
-            # signal path for sombra delay
-            # -HAZE- controls distortion added to distdelay
-            left_distdelay, right_distdelay = distdelay(distortion_out, buftime, values['-HAZE-'])
-            left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
-            left_gv, right_gv = grimeverb(left_dirtdelay, right_dirtdelay)
-            left_grimeverb = (left_gv * .5)
-            right_grimeverb = (right_gv * .5)
+            wetdry = .5
 
             # -WET_DRY- controls wet/dry value
             mix = Mixer(chnls=5, mul=.55)
@@ -67,11 +70,11 @@ def main():
             mix.addInput(2, right_grimeverb)
             mix.addInput(3, left_lightverb)
             mix.addInput(4, right_lightverb)
-            mix.setAmp(0, 0, (1 - values['-WET_DRY-']))
-            mix.setAmp(1, 0, values['-WET_DRY-'])
-            mix.setAmp(2, 0, values['-WET_DRY-'])
-            mix.setAmp(3, 0, values['-WET_DRY-'])
-            mix.setAmp(4, 0, values['-WET_DRY-'])
+            mix.setAmp(0, 0, (1 - wetdry))
+            mix.setAmp(1, 0, wetdry)
+            mix.setAmp(2, 0, wetdry)
+            mix.setAmp(3, 0, wetdry)
+            mix.setAmp(4, 0, wetdry)
             mix.out()
 
             if event is None:
@@ -82,7 +85,7 @@ def main():
                 sg.popup(f'The slider value = {values["-SLIDER-"]}')
         except TypeError:
             break
-    s.stop()      
+            
     window.close()
 
 
@@ -116,7 +119,7 @@ def distortion(wet_path1):
     return mixed
 
 
-def distdelay(distortion_out, buftime, haze):
+def distdelay(distortion_out, buftime):
     delay_time_l = Sig(0.08)  # Delay time for the left channel delay.
     delay_feed = Sig(0.3)  # Feedback value for both delays.
     delay_time_r = Sig(delay_time_l, add=-buftime)
@@ -129,8 +132,8 @@ def distdelay(distortion_out, buftime, haze):
     dleft = Disto(left, drive=0.0, slope=.8)
     dright = Disto(left, drive=0.0, slope=.8)
 
-    dleft.setDrive(haze) # distortion drive controlled by haze
-    dright.setDrive(haze) # distortion drive controlled by haze
+    dleft.setDrive(.5) # distortion drive controlled by haze
+    dright.setDrive(.5) # distortion drive controlled by haze
 
     return dleft, dright
 
