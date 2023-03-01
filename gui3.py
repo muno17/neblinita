@@ -15,12 +15,12 @@ def main():
             [sg.Text(text='   wet/dry', font='Monaco'), sg.Text(text='   haze', font='Monaco'),]]
 
     ### initiate pyo server ###
-    s = Server(sr=44100, buffersize=3072, nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
+    s = Server(nchnls=1) # nchnles defaults to 2 channel output, changed to 1 for headphones
     s.amp = 0.2
     # set the input device
     s.setInputDevice(1) # zoom = 1 with headphones
     # set the output device
-    s.setOutputDevice(2) # headphones: when zoom is used 2 - headphones, 4 - speakers
+    s.setOutputDevice(4) # headphones: when zoom is used 2 - headphones, 4 - speakers
 
     # boot server
     s.boot()
@@ -58,8 +58,8 @@ def main():
             left_distdelay, right_distdelay = distdelay(distortion_out, buftime, values['-HAZE-'])
             left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
             left_gv, right_gv = grimeverb(left_dirtdelay, right_dirtdelay)
-            left_grimeverb = (left_gv * .2) #.5
-            right_grimeverb = (right_gv * .2) #.5
+            left_grimeverb = (left_gv * .5)
+            right_grimeverb = (right_gv * .5)
 
             # -WET_DRY- controls wet/dry value
             mix = Mixer(chnls=5, mul=.55)
