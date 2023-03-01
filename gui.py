@@ -59,7 +59,7 @@ def main():
     right_lightverb = (wet_right * .6)
 
     wet_dry = 0.6
-
+    
     ### mixer ###
     master = mix(dry, left_grimeverb, right_grimeverb, left_lightverb, right_lightverb, wet_dry)
     master.out()
@@ -71,7 +71,7 @@ def main():
     ### gui event loop ###
     while True:
         event, values = window.read()
-        print(event, values)
+        
         if event is None:
             break
         if event in (sg.WIN_CLOSED, 'Exit'):
