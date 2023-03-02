@@ -32,61 +32,68 @@ When the signal is fully dry, all you hear is the original dry signal.  When the
 the wet/dry anywhere in between fully wet and fully dry will attenuate each output accordingly, allowing the user to mix the dry signal with the effects
 of **neblinita** as they see fit. 
 
-I used the Pyo library as the sound engine to create audio effects and to handle all of the audio routing.   
-  
+____________________
 
-I made a simple GUI with the PySimpleGui library.
+I used the Pyo library to handle all of the audio routing:
+
+**Within the project folder is a program I created named 'audio_io.py'. Running this program before starting the main program is essential to assure that your audio will** 
+**be routed correctly and to ensure that audio feedback loops won't be created (trust me you do not want this to happen for the sake of your ears).** audio_io.py will output 
+information pertaining to the audio inputs and outputs of your computer.  In particular, we want to pay special attention to the 'default input' and 'default output' at the 
+bottom.  You will want these to match the desired devices listed in the 'AUDIO devices' section above.  For example, I want to input signal into my computer through my
+Zoom H4N Pro recorder and be able to listen through my headphones that I have plugged into my computer.  When I run audio_io.py, my 'AUDIO devices' and default i/o
+are listed as:
+
+>0: OUT, name: H4, host api index: 0, default sr: 48000 Hz, latency: 0.004354 s
+>1: IN, name: H4, host api index: 0, default sr: 44100 Hz, latency: 0.005896 s
+>2: OUT, name: External Headphones, host api index: 0, default sr: 44100 Hz, latency: 0.006213 s
+>3: IN, name: MacBook Pro Microphone, host api index: 0, default sr: 48000 Hz, latency: 0.033687 s
+>4: OUT, name: MacBook Pro Speakers, host api index: 0, default sr: 44100 Hz, latency: 0.009229 s
+>5: IN, name: Microsoft Teams Audio, host api index: 0, default sr: 48000 Hz, latency: 0.010000 s
+>5: OUT, name: Microsoft Teams Audio, host api index: 0, default sr: 48000 Hz, latency: 0.001333 s
+>
+> default input: 1
+> default output: 2
+
+In this example, the defaults are already set for where I would like to input and output the audio.  In the main Project.py file I would then go to line 22 and enter in the 
+correct input and output numbers, 1 for the input and 2 for the output in this case:
+
+ >   # set the input device
+ >   s.setInputDevice(1)
+ >   # set the output device
+ >   s.setOutputDevice(2)
+
+**MAKE SURE THAT THE INPUT AND OUTPUT COMBINATION IS NEVER INPUT - INTERNAL MICROPHONE (3 in the example above) AND OUTPUT - INTERNAL SPEAKERS (4 in the example above).**
+**THIS WILL CREATE AN AUDIO FEEDBACK LOOP SINCE THE BUILD IN MICROPHONE WILL PICK UP ANYTHING COMING OUT OF THE INTERNAL SPEAKERS, CREATING AN INFINITE LOOP OF EVER**
+**EXPANDING PAIN TO YOUR EARS.  IF YOU DO THIS BY ACCIDENT THEN EXIT THE PROGRAM IMMEDIATELY TO AVOID EAR DAMAGE**
+
+______________________
+
+I also used the Pyo library for the sound engine.  
+
+I knew very little about digital signal processing (DSP) going into this project so I thoroughly read through all of the Pyo documentation to try and get a grasp on the subject, 
+or least enough to be able to build this project.  The general concept is that pyo creates a 'server' where all the audio runs through.  Within this server, you run operations on
+'pyo objects' which are essentially classes pertaining to each component of an audio system.  **neblina** was designed to take in an audio signal and then create two copies of that signal.  Each signal is then fed through the processes described in the first segment of this ReadMe.  
+
+The pyo documentation lists effect types in two ways.  The first is in a 
+simple function call, such as Disto() to apply distortion to an effect.  These functions seemed tempting to use because of their ease of use but they don't allow for much customization.  The second is by presenting broken down bare-bones functions of different effects. These templates (for example, http://ajaxsoundstudio.com/pyodoc/examples/07-effects/03-fuzz-disto.html for distortion) show you the basic building blocks that make up a certain type of effect.  From these templates you're then able to make your own modifications and add/remove functions as you see fit.  I took this latter approach for all of my effects since I wanted something fully customizable to my liking that would sound like the idea I had in my head when I first thought of making this project.  This of course took a lot of experimentation since I'm a DSP noob but, after a lot of trial and error, I finished customizing all of my effects exactly
+how I wanted them to function.  After creating these effects, I chained them all together by creating return values (pyo objects) for each effect which I would then assign and then send through the next effect.  After running through each chain, the final reverb effect of both **luz** and **sombra** returns a pyo object containing the final output of each signal chain.
+
+The pyo objects for **luz** and  **sombra** are then summed in a Mixer object along with the initial dry signal.  This again took a lot of experimentation to get the output levels
+of each effect to a proper level so as to not output a signal so loud that it would cause audio dropouts and damage speakers/headphones.  The method I used was to attenuate each signal
+with a float value between 0.0 and 1.0.  The output for the input signal combined with **luz** and **sombra** would then max out between  -15 to -5 db depending on the level of the 
+initial signal.  This of course doesn't factor in devious individuals who are out to make speakers and eardrums explode by sending very loud input signal but in this case, and the way
+the majority of virtual effects processors work, we assume the user is a rational well-intended person.  I also created a wet/dry function that calculates new attenuation levels based
+on how wet or dry the user wants the signal to be.  This is all then output and the result is a glorious wave of distorted space and sound.
+
+______________________
+
+I created a simple GUI using the PySimpleGui library.
+
+I initially attempted to create 
 
 
 
-sombra reverb
-- distortion for grit
-- dist_delay to add additional distortion and to drag out the distorted signal
-- dirt_delay to have the distorted signal repeat
-- grimeverb to create a distorted space
-____________________________
 
-Challenges
-
-- trying to eliminate audio dropouts - UNABLE TO COMPLETE
-- implementing a way to stream live sound from an external (ob-6) source - DONE
-- customizing the effects and managing gain - DONE
-- chaining all the effect together - DONE
-- implementing a wet/dry feature - DONE
-- creating a GUI DONE
-    - knobs for aggregate functions DONE
-
-____________________________
-
-TASKS
-
-- create a GUI for control and aggregate function knobs DONE
-    - create aggregate GUI widgets to control: UNABLE TO COMPLETE
-        - fog (distortion) knob DONE
-            - add distortion to distdelay DONE
-        - space knobs (reverb and delay time) UNABLE TO COMPLETE
-        - melt (reverb decay) UNABLE TO COMPLETE
-        - fractals (harmonic content - chorus / delay frequency) UNABLE TO COMPLETE
-        - wet/dry knob DONE
-            - dry: dry = 1, everything else = 0
-            - wet: dry = 0, grimeverbs = .8, lightverbs = 1
-- customize distortion parameter DONE
-- customize delay1 parameter DONE
-- customize delay2 parameter DONE
-- customize chorus parameter DONE
-- customize reverb parameter DONE
-- chain everything together, test different signal paths DONE
-- audio routing DONE
-    - implement audio output DONE
-    - create master mix DONE
-        - multiplied output  by .5 to prevent clipping
-
-______________________________
-
-Testing
-
-- don't allow a feedback loop to be created by the computer
-    - input of microphone and output of built in speaker not allowed
 
 ______________________________
 Acknowledgments
@@ -94,3 +101,4 @@ Acknowledgments
 - Pyo by AJAX SOUND STUDIO, documentation (http://ajaxsoundstudio.com/pyodoc/index.html#)
 - PySimpleGui, documentation (https://www.pysimplegui.org/en/latest/call%20reference/)
 - David Malan and the CS50 team for being such amazing teachers
+- my ears for dealing with many unintended sounds while I was testing this project
