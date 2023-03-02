@@ -118,7 +118,9 @@ so much math is being calculated every second, Python then has to compile everyt
 of that has to continue being calculated nonstop, overloading the computer with information.  In short, since the processes cannot be ran at a fast enough rate, my GUI was making it so
 that sound couldn't smoothly change with every adjustment to any of the parameters I had created.
 
-To partially solved this, I dumbed my GUI down to be able to control two thinsg: the wet/dry signal and the amount of distortion (labeled fog) 
+To partially solved this, I dumbed my GUI down to be able to control two things: the wet/dry signal and the amount of distortion (labeled fog)
+
+
 
 
 
