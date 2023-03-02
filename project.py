@@ -82,16 +82,13 @@ def main():
                 sg.popup(f'The slider value = {values["-SLIDER-"]}')
         except TypeError:
             break
-    print("after loop")
-    s.stop()
-    print("after server stop")      
+
+    s.stop()    
     window.close()
-    print("after window close")
     
 
 def bufculator(buftime, samplerate):
     return buftime / samplerate
-
 
 
 def distortion(wet_path1):
