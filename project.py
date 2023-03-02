@@ -9,7 +9,7 @@ def main():
 
     ### create the gui window ###
     sg.theme('DarkGrey4')
-    layout = [[sg.Text('neblina jr', font=('Monaco', 25), pad=(5,0))],
+    layout = [[sg.Text('neblinita', font=('Monaco', 25), pad=(5,0))],
             [sg.Text('muno audio', font=('Monaco', 12), pad=(5,5))],
             [sg.Slider((0.00,1.00), key='-WET_DRY-', default_value=0, orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, pad=(15,0), border_width=2, font='Monaco'),
             sg.Slider((0.00,1.00), key='-FOG-', default_value=0, orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco')],
