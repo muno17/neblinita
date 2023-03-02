@@ -44,11 +44,17 @@ Zoom H4N Pro recorder and be able to listen through my headphones that I have pl
 are listed as:
 
 >0: OUT, name: H4, host api index: 0, default sr: 48000 Hz, latency: 0.004354 s
+
 >1: IN, name: H4, host api index: 0, default sr: 44100 Hz, latency: 0.005896 s
+
 >2: OUT, name: External Headphones, host api index: 0, default sr: 44100 Hz, latency: 0.006213 s
+
 >3: IN, name: MacBook Pro Microphone, host api index: 0, default sr: 48000 Hz, latency: 0.033687 s
+
 >4: OUT, name: MacBook Pro Speakers, host api index: 0, default sr: 44100 Hz, latency: 0.009229 s
+
 >5: IN, name: Microsoft Teams Audio, host api index: 0, default sr: 48000 Hz, latency: 0.010000 s
+
 >5: OUT, name: Microsoft Teams Audio, host api index: 0, default sr: 48000 Hz, latency: 0.001333 s
 >
 > default input: 1
@@ -57,9 +63,7 @@ are listed as:
 In this example, the defaults are already set for where I would like to input and output the audio.  In the main Project.py file I would then go to line 22 and enter in the 
 correct input and output numbers, 1 for the input and 2 for the output in this case:
 
- >   # set the input device
  >   s.setInputDevice(1)
- >   # set the output device
  >   s.setOutputDevice(2)
 
 **MAKE SURE THAT THE INPUT AND OUTPUT COMBINATION IS NEVER INPUT - INTERNAL MICROPHONE (3 in the example above) AND OUTPUT - INTERNAL SPEAKERS (4 in the example above).**
