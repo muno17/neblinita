@@ -94,7 +94,31 @@ ______________________
 
 I created a simple GUI using the PySimpleGui library.
 
-I initially attempted to create 
+I initially attempted to create a GUI that would let you control eight different parameters in **neblinita** but I quickly realized that this would complicate things in a very sonically-ugly manner.  Throughout all the research that was conducted for this project, one common trend I kept seeing was people having this whole "don't use python for audio
+processing, since it's a higher level language it's not comparatively as fast and won't be able to handle audio as well as a lower level language such as C or C++" mentality.
+I initially thought this was maybe overexagerrated by people out to bash Python.  Before implementing a GUI, **neblinita** sounded exactly how I wanted it to and there didn't
+seem to be any issues with processing the audio.  However, once I started creating modifiable parameters through the use of a GUI, I quickly realized that maybe there was a lot
+of truth into what I kept reading about C++ superiority in audio processing.  
+
+The first GUI element I added was a slider to be able to control the wet/dry level since I think that's the single most crucial part of any effects processor since you want to let
+the user be able to control how much of an effect is added to their signal.  After hours(days) of trying to figure out how to implement this through a GUI, I finally succeeded! Or,
+at least I thought I had.  I had a slider that would definitely do what it was intended to do but the issue now was that if I was sending audio through the effect and changing the
+wet/dry parameter at the same time then I would experience a lot of crackling, hissing and audio dropouts which made the sound not sound at all how I intended.  I thought this was 
+maybe something small that I could fix later, so I kept on more GUI elements.  I had slider that could now control the delay time and the amount of space created by **luz** and **sombra**!
+But now the issue kept getting worse and worse with more unintended audio artifacts ruining my once beautiful sound :(.  I thought maybe I would add the ability to change the amount of
+distortion added to **sombra** and that that would somehow fix everything but boy was I wrong.  
+
+At this point I had a functioning GUI but when I tried to do anything with it my sound would get mangled and violently sent back out as the worst thing that has ever gone into your ear holes.  Then I realized why this was happening and why maybe(probably) Python is not the best language to use for audio processing.  Much like an image, sound is interpretted the by
+computers as tiny slices that together make up the whole: samples are the pixels of the audio world.  In order for a computer to generate a signal that can be interpreted correctly by
+a human ear, the amount of samples that need to be churned out per second  is typically *at least* 44100.  If you look through the code of my project, you'll see that samples are what
+are being sent through everything.  Calculations are then ran on the samples at a rate of 44100 per second, or one every 0.005804988662131519 seconds, and this process continues endlessly
+through every calculation as long as an input signal is being received.  That is *a lot* of math going on every second.  Now factor in changing values (sliders on the GUI) and now you have
+*a lot* of math having to be continually recalculated every time a slider is moved even a fraction (1/100 to be precise) and what you end up with is *like seriously so much math*.  Since 
+so much math is being calculated every second, Python then has to compile everything down to C until it is finally compiled down to binary for the computer to interpret.  And then all
+of that has to continue being calculated nonstop, overloading the computer with information.  In short, since the processes cannot be ran at a fast enough rate, my GUI was making it so
+that sound couldn't smoothly change with every adjustment to any of the parameters I had created.
+
+To partially solved this, I dumbed my GUI down to be able to control two thinsg: the wet/dry signal and the amount of distortion (labeled fog) 
 
 
 
