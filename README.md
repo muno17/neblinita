@@ -58,12 +58,14 @@ are listed as:
 >5: OUT, name: Microsoft Teams Audio, host api index: 0, default sr: 48000 Hz, latency: 0.001333 s
 >
 > default input: 1
+
 > default output: 2
 
 In this example, the defaults are already set for where I would like to input and output the audio.  In the main Project.py file I would then go to line 22 and enter in the 
 correct input and output numbers, 1 for the input and 2 for the output in this case:
 
  >   s.setInputDevice(1)
+ 
  >   s.setOutputDevice(2)
 
 **MAKE SURE THAT THE INPUT AND OUTPUT COMBINATION IS NEVER INPUT - INTERNAL MICROPHONE (3 in the example above) AND OUTPUT - INTERNAL SPEAKERS (4 in the example above).**
