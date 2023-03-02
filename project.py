@@ -25,7 +25,7 @@ def main():
     # boot server and start
     s.boot().start()
     # get buffer time
-    buftime = bufculator(s)
+    buftime = bufculator(s.getBufferSize(), s.getSamplingRate())
     # dry signal
     dry = Input()
     # create copy of input for fog reverb
@@ -89,6 +89,11 @@ def main():
     print("after window close")
     
 
+def bufculator(buftime, samplerate):
+    return buftime / samplerate
+
+
+
 def distortion(wet_path1):
     # Distortion parameters
     BP_CENTER_FREQ = 400  # Bandpass filter center frequency.
@@ -117,10 +122,6 @@ def distortion(wet_path1):
     mixed = Interp(wet_path1, lp, interp=BALANCE)
 
     return mixed
-
-def bufculator(s):
-    return s.getBufferSize() / s.getSamplingRate()
-
 
 
 def distdelay(distortion_out, buftime, haze):

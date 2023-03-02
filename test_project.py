@@ -1,11 +1,10 @@
-from project import 
-from project import
-from project import
-
+from project import bufculator
+#from project import
+#from project import
 
 
 def test_bufculator():
-    assert bufculator(s)  == 0.005804988662131519
+    assert bufculator(256, 44100)  == 0.005804988662131519
 
 
 def test_function_2():
