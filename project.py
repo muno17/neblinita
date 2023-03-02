@@ -9,10 +9,11 @@ def main():
 
     ### create the gui window ###
     sg.theme('DarkGrey4')
-    layout = [[sg.Text('neblina', font=('Monaco', 30), pad=(5,5)), sg.Text('  muno audio', font=('Monaco', 12))],
+    layout = [[sg.Text('neblina jr', font=('Monaco', 25), pad=(5,0))],
+            [sg.Text('muno audio', font=('Monaco', 12), pad=(5,5))],
             [sg.Slider((0.00,1.00), key='-WET_DRY-', default_value=0, orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, pad=(15,0), border_width=2, font='Monaco'),
-            sg.Slider((0.00,1.00), key='-HAZE-', default_value=0, orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco')],
-            [sg.Text(text='   wet/dry', font='Monaco'), sg.Text(text='   haze', font='Monaco'),]]
+            sg.Slider((0.00,1.00), key='-FOG-', default_value=0, orientation='v', resolution=.01, tick_interval=.5, enable_events=True, disable_number_display=True, border_width=2, pad=(15,0), font='Monaco')],
+            [sg.Text(text='   wet/dry', font='Monaco'), sg.Text(text='    fog', font='Monaco'),]]
 
     ### initiate pyo server ###
     s = Server(nchnls=1) # nchnls defaults to 2 channel output, changed to 1 for headphones
@@ -53,8 +54,8 @@ def main():
             event, values = window.read()
 
             # signal path for sombra delay
-            # -HAZE- controls distortion added to distdelay
-            left_distdelay, right_distdelay = distdelay(distortion_out, buftime, values['-HAZE-'])
+            # -FOG- controls distortion added to distdelay
+            left_distdelay, right_distdelay = distdelay(distortion_out, buftime, values['-FOG-'])
             left_dirtdelay, right_dirtdelay = dirtdelay(left_distdelay, right_distdelay, buftime)
             left_gv, right_gv = grimeverb(left_dirtdelay, right_dirtdelay)
             left_grimeverb = (left_gv * .5)
@@ -121,7 +122,7 @@ def distortion(wet_path1):
     return mixed
 
 
-def distdelay(distortion_out, buftime, haze):
+def distdelay(distortion_out, buftime, fog):
     delay_time_l = Sig(0.08)  # Delay time for the left channel delay.
     delay_feed = Sig(0.3)  # Feedback value for both delays.
     delay_time_r = Sig(delay_time_l, add=-buftime)
@@ -134,8 +135,8 @@ def distdelay(distortion_out, buftime, haze):
     dleft = Disto(left, drive=0.0, slope=.8)
     dright = Disto(left, drive=0.0, slope=.8)
 
-    dleft.setDrive(haze) # distortion drive controlled by haze
-    dright.setDrive(haze) # distortion drive controlled by haze
+    dleft.setDrive(fog) # distortion drive controlled by fog
+    dright.setDrive(fog) # distortion drive controlled by fog
 
     return dleft, dright
 
