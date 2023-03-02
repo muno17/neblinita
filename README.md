@@ -73,3 +73,4 @@ Acknowledgments
 
 - Pyo by AJAX SOUND STUDIO, documentation (http://ajaxsoundstudio.com/pyodoc/index.html#)
 - PySimpleGui, documentation (https://www.pysimplegui.org/en/latest/call%20reference/)
+- David Malan and the CS50 team for being such amazing teachers
