@@ -118,13 +118,17 @@ so much math is being calculated every second, Python then has to compile everyt
 of that has to continue being calculated nonstop, overloading the computer with information.  In short, since the processes cannot be ran at a fast enough rate, my GUI was making it so
 that sound couldn't smoothly change with every adjustment to any of the parameters I had created.
 
-To partially solved this, I dumbed my GUI down to be able to control two things: the wet/dry signal and the amount of distortion (labeled fog)
+To partially solve this, I dumbed my GUI down to be able to control two things: the wet/dry signal and the amount of distortion (labeled fog)
 
+!(https://github.com/muno17/neblinita/blob/main/neblinita%20screenshot.png)
 
+The original name for this project was **neblina** but with this new, smaller GUI **neblinita* was born.
 
-
-
-
+Unfortunately, there are still some audio dropouts as you move the sliders to change either of the two parameters, but it's not nearly as bad as the original version I had made.
+I think this is an issue that I could fix in the future once my DSP and Python knowledge have improved, but for now I'm quite proud of this little unit.  This is a niche that
+in programming that I'm going to explore more since it combines my new hobby with my old one and allows me to create something that, for me, is very pleasing and useful. In the future
+I'm planning on creating a hardware unit for **neblina** using **neblinita** as the prototype.  I don't know how I'm going to do this but if CS50 has taught me anything, it's that
+if I really want to I can learn to do anything.
 
 ______________________________
 Acknowledgments
@@ -132,4 +136,4 @@ Acknowledgments
 - Pyo by AJAX SOUND STUDIO, documentation (http://ajaxsoundstudio.com/pyodoc/index.html#)
 - PySimpleGui, documentation (https://www.pysimplegui.org/en/latest/call%20reference/)
 - David Malan and the CS50 team for being such amazing teachers
-- my ears for dealing with many unintended sounds while I was testing this project
+- my ears for dealing with many disgusting sounds while I was testing this project
