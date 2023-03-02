@@ -124,11 +124,10 @@ To partially solve this, I dumbed my GUI down to be able to control two things: 
 
 The original name for this project was **neblina** but with this new, smaller GUI **neblinita* was born.
 
-Unfortunately, there are still some audio dropouts as you move the sliders to change either of the two parameters, but it's not nearly as bad as the original version I had made.
-I think this is an issue that I could fix in the future once my DSP and Python knowledge have improved, but for now I'm quite proud of this little unit.  This is a niche that
-in programming that I'm going to explore more since it combines my new hobby with my old one and allows me to create something that, for me, is very pleasing and useful. In the future
-I'm planning on creating a hardware unit for **neblina** using **neblinita** as the prototype.  I don't know how I'm going to do this at all but if CS50 has taught me anything it's that
-if I really want to, I can learn to do anything.
+Unfortunately, there are still some audio dropouts as you move the sliders to change either of the two parameters, but it's not nearly as bad as the original version I had made.  My fix
+for now is to just simply quit sending an input signal, change the settings on the sliders once there's no sound, play something, and repeat the process until I get bored.  I think this is an issue that I could fix in the future once my DSP and Python knowledge have improved, but for now I'm quite proud of this little unit.  
+
+Audio programming is something that I'm going to explore more since it combines my new hobby with my old one and allows me to create something that, for me, is very pleasing and useful. In the future I'm planning on creating a hardware unit **neblina** using **neblinita** as the prototype.  I don't know how I'm going to do this at all but if CS50 has taught me anything it's that if I really want to, I can learn to do anything.
 
 ______________________________
 Acknowledgments
