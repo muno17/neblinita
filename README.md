@@ -1,4 +1,4 @@
-# neblina - audio fog machine
+# neblina jr - audio fog machine
 #### Video Demo:  <URL HERE>
 #### Description:
 Using Pyo library as a sound engine to create an audio effect processor.
