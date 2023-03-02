@@ -5,7 +5,7 @@ Using Pyo library as a sound engine to create an audio effect processor.
 Using PySimpleGUI library to create the GUI.
 ____________________________
 
-neblina creates two different flavors of reverbs:
+neblinita creates two different flavors of reverbs:
 
 'luz reverb' - creates harmonic content and a large atmosphere
 
