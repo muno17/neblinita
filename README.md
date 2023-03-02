@@ -120,7 +120,7 @@ that sound couldn't smoothly change with every adjustment to any of the paramete
 
 To partially solve this, I dumbed my GUI down to be able to control two things: the wet/dry signal and the amount of distortion (labeled fog)
 
-![neblinita](neblinita/blob/main/neblinita%20screenshot.png)
+![neblinita](https://github.com/muno17/neblinita/blob/main/neblinita%20screenshot.png)
 
 The original name for this project was **neblina** but with this new, smaller GUI **neblinita* was born.
 
