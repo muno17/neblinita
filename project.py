@@ -16,12 +16,12 @@ def main():
             [sg.Text(text='   wet/dry', font='Monaco'), sg.Text(text='    fog', font='Monaco'),]]
 
     ### initiate pyo server ###
-    s = Server(nchnls=1) # nchnls defaults to 2 channel output, changed to 1 for headphones
-    s.amp = 0.2
+    s = Server(nchnls=1)
+    s.amp = 0.3
     # set the input device
     s.setInputDevice(1)
     # set the output device
-    s.setOutputDevice(2)
+    s.setOutputDevice(8)
 
     # boot server and start
     s.boot().start()
