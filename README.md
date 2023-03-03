@@ -1,6 +1,5 @@
 # **neblinita** - sonic fog machine
 #### Video Demo:  https://youtu.be/fLTnrpwYEus
-#### Description:
 
 As a lifelong musician, I have always been intrigued with audio effects such as delays, echos and distortion and how they're able to transform any 
 sound into something new.  In particular, I'm quite fond of reverbs and their ability to transport the listener into an immersive space of sonic ambiance.  
